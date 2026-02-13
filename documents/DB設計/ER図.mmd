@@ -1,0 +1,39 @@
+erDiagram
+    inquiries ||--o{ inquiry_messages : "inquiry_id"
+    users ||--o{ inquiries : "staff_id"
+    users ||--o{ inquiry_messages : "staff_id"
+    
+    inquiries {
+        bigint id PK "主キー"
+        varchar inquiry_number UK "受付番号 (例: INQ-20260213-0001)"
+        bigint staff_id FK "担当者ID (NULL可)"
+        varchar order_number "注文番号 (任意)"
+        varchar category "カテゴリ (product/order/shipping/return/system/other)"
+        varchar customer_name "顧客氏名"
+        varchar customer_email "顧客メールアドレス"
+        varchar status "ステータス (pending/in_progress/resolved/closed)"
+        varchar priority "優先度 (low/medium/high/urgent)"
+        text internal_notes "対応メモ (社内向け、NULL可)"
+        timestamp created_at "作成日時"
+        timestamp updated_at "更新日時"
+    }
+    
+    users {
+        bigint id PK "主キー"
+        varchar login_id UK "ログインID"
+        varchar name "担当者氏名"
+        varchar password "パスワード (ハッシュ化)"
+        timestamp created_at "作成日時"
+        timestamp updated_at "更新日時"
+    }
+    
+    inquiry_messages {
+        bigint id PK "主キー"
+        bigint inquiry_id FK "問い合わせID"
+        bigint staff_id FK "担当者ID (NULL可)"
+        varchar message_type "メッセージ種別 (initial_inquiry/customer_reply/staff_reply)"
+        varchar subject "件名"
+        text body "本文"
+        timestamp created_at "作成日時"
+        timestamp updated_at "更新日時"
+    }
