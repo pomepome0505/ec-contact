@@ -9,8 +9,16 @@
         "lint:fix": "eslint resources/js/ --fix",
         "format": "prettier --write resources/js/"
     },
+    "dependencies": {
+        "@inertiajs/vue3": "^2.3.15",
+        "@mdi/font": "^7.4.47",
+        "laravel-precognition-vue-inertia": "^0.8.0",
+        "vue": "^3.5.28",
+        "vuetify": "^3.11.8"
+    },
     "devDependencies": {
         "@eslint/js": "^9.22.0",
+        "@vitejs/plugin-vue": "^6.0.4",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
         "eslint": "^9.22.0",
@@ -20,13 +28,5 @@
         "laravel-vite-plugin": "^2.0.0",
         "prettier": "^3.5.3",
         "vite": "^7.0.7"
-    },
-    "dependencies": {
-        "@inertiajs/vue3": "^2.3.15",
-        "@mdi/font": "^7.4.47",
-        "@vitejs/plugin-vue": "^6.0.4",
-        "laravel-precognition-vue-inertia": "^0.8.0",
-        "vue": "^3.5.28",
-        "vuetify": "^3.11.8"
     }
 }

@@ -14,10 +14,12 @@ export default [
         languageOptions: {
             globals: {
                 ...globals.browser,
+                route: 'readonly',
             },
         },
         rules: {
             'vue/multi-word-component-names': 'off',
+            'vue/no-v-model-argument': 'off',
         },
     },
 ];

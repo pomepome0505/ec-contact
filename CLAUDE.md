@@ -11,7 +11,7 @@ ECサイト「株式会社ライフスタイルマート」の問い合わせ管
 ## 技術スタック
 
 - **バックエンド**: Laravel 12 (PHP 8.5)
-- **フロントエンド**: Vue.js + Inertia.js, Vite, Tailwind CSS
+- **フロントエンド**: Vue.js + Inertia.js, Vuetify 3, Vite
 - **DB**: MariaDB 11.8
 - **インフラ**: AWS (ECS/Fargate), Docker, Terraform
 - **CI/CD**: GitHub Actions
