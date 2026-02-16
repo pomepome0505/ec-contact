@@ -10,7 +10,8 @@
       "Bash(MSYS_NO_PATHCONV=1 docker compose:*)",
       "Bash(docker rm:*)",
       "Bash(docker build:*)",
-      "Bash(docker rmi:*)"
+      "Bash(docker rmi:*)",
+      "WebSearch"
     ]
   }
 }
