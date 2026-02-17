@@ -75,13 +75,16 @@ class InquiryService
             'id' => $inquiry->id,
             'inquiry_number' => $inquiry->inquiry_number,
             'category_label' => $category->label(),
+            'status' => $status->value,
             'status_label' => $status->label(),
             'status_color' => $status->color(),
+            'priority' => $priority->value,
             'priority_label' => $priority->label(),
             'priority_color' => $priority->color(),
             'customer_name' => $inquiry->customer_name,
             'customer_email' => $inquiry->customer_email,
             'order_number' => $inquiry->order_number,
+            'staff_id' => $inquiry->staff_id,
             'staff_name' => $staff?->name,
             'internal_notes' => $inquiry->internal_notes,
             'created_at' => $inquiry->created_at?->format('Y/m/d H:i'),
@@ -109,6 +112,30 @@ class InquiryService
                 'label' => $p->label(),
             ])->all(),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function updateStatus(Inquiry $inquiry, array $validated): Inquiry
+    {
+        $inquiry->update($validated);
+
+        return $inquiry->refresh();
+    }
+
+    /**
+     * @return array<int, array{id: int, name: string}>
+     */
+    public function getStaffList(): array
+    {
+        return User::orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (User $user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ])
+            ->all();
     }
 
     /**

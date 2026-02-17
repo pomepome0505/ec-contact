@@ -3,19 +3,55 @@
     import { Head, router } from '@inertiajs/vue3';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-    defineProps({
+    const props = defineProps({
         inquiry: { type: Object, default: () => ({}) },
+        statuses: { type: Array, default: () => [] },
+        priorities: { type: Array, default: () => [] },
+        staffs: { type: Array, default: () => [] },
     });
 
     const TEXT_LIMIT = 500;
     const expandedNotes = ref(false);
     const expandedMessages = ref({});
+    const editing = ref(false);
+    const editForm = ref({});
+    const showSuccessDialog = ref(false);
 
     const isLong = (text) => text && text.length > TEXT_LIMIT;
     const truncate = (text) => text.slice(0, TEXT_LIMIT) + '...';
 
     const toggleMessage = (id) => {
         expandedMessages.value[id] = !expandedMessages.value[id];
+    };
+
+    const startEdit = () => {
+        editForm.value = {
+            status: props.inquiry.status,
+            priority: props.inquiry.priority,
+            staff_id: props.inquiry.staff_id,
+        };
+        editing.value = true;
+    };
+
+    const cancelEdit = () => {
+        editing.value = false;
+    };
+
+    const submitEdit = () => {
+        router.patch(
+            route('inquiries.update', props.inquiry.id),
+            editForm.value,
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    editing.value = false;
+                    showSuccessDialog.value = true;
+                    setTimeout(() => {
+                        showSuccessDialog.value = false;
+                    }, 3000);
+                },
+            },
+        );
     };
 
     const messageTypeLabel = (type) => {
@@ -48,6 +84,7 @@
     const goBack = () => {
         router.get(route('inquiries.index'));
     };
+
 </script>
 
 <template>
@@ -81,25 +118,55 @@
 
         <!-- 基本情報 -->
         <v-card class="mb-4" style="border: 1px solid #e2e8f0">
-            <v-card-title class="text-subtitle-1 font-weight-bold pa-4 pb-2">
-                <v-icon icon="mdi-information-outline" class="mr-2" />
-                基本情報
+            <v-card-title
+                class="d-flex align-center justify-space-between pa-4 pb-2"
+            >
+                <div class="text-subtitle-1 font-weight-bold">
+                    <v-icon icon="mdi-information-outline" class="mr-2" />
+                    基本情報
+                </div>
+                <v-btn
+                    v-if="!editing"
+                    variant="text"
+                    color="secondary"
+                    size="small"
+                    icon="mdi-pencil"
+                    @click="startEdit"
+                />
             </v-card-title>
             <v-divider />
             <v-card-text class="pa-4">
                 <v-row dense>
                     <v-col cols="12" sm="6" md="4">
-                        <div class="text-caption text-medium-emphasis mb-1">
-                            ステータス
-                        </div>
-                        <v-chip
-                            :color="inquiry.status_color"
-                            variant="tonal"
-                            size="small"
-                            label
-                        >
-                            {{ inquiry.status_label }}
-                        </v-chip>
+                        <template v-if="editing">
+                            <v-select
+                                v-model="editForm.status"
+                                :items="statuses"
+                                item-title="label"
+                                item-value="value"
+                                label="ステータス"
+                                variant="outlined"
+                                density="compact"
+                                rounded="lg"
+                                color="primary"
+                                hide-details
+                            />
+                        </template>
+                        <template v-else>
+                            <div
+                                class="text-caption text-medium-emphasis mb-1"
+                            >
+                                ステータス
+                            </div>
+                            <v-chip
+                                :color="inquiry.status_color"
+                                variant="tonal"
+                                size="small"
+                                label
+                            >
+                                {{ inquiry.status_label }}
+                            </v-chip>
+                        </template>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                         <div class="text-caption text-medium-emphasis mb-1">
@@ -110,17 +177,35 @@
                         </span>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                        <div class="text-caption text-medium-emphasis mb-1">
-                            優先度
-                        </div>
-                        <v-chip
-                            :color="inquiry.priority_color"
-                            variant="tonal"
-                            size="small"
-                            label
-                        >
-                            {{ inquiry.priority_label }}
-                        </v-chip>
+                        <template v-if="editing">
+                            <v-select
+                                v-model="editForm.priority"
+                                :items="priorities"
+                                item-title="label"
+                                item-value="value"
+                                label="優先度"
+                                variant="outlined"
+                                density="compact"
+                                rounded="lg"
+                                color="primary"
+                                hide-details
+                            />
+                        </template>
+                        <template v-else>
+                            <div
+                                class="text-caption text-medium-emphasis mb-1"
+                            >
+                                優先度
+                            </div>
+                            <v-chip
+                                :color="inquiry.priority_color"
+                                variant="tonal"
+                                size="small"
+                                label
+                            >
+                                {{ inquiry.priority_label }}
+                            </v-chip>
+                        </template>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                         <div class="text-caption text-medium-emphasis mb-1">
@@ -147,12 +232,31 @@
                         </span>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                        <div class="text-caption text-medium-emphasis mb-1">
-                            担当者
-                        </div>
-                        <span class="text-body-2">
-                            {{ inquiry.staff_name || '未割当' }}
-                        </span>
+                        <template v-if="editing">
+                            <v-select
+                                v-model="editForm.staff_id"
+                                :items="staffs"
+                                item-title="name"
+                                item-value="id"
+                                label="担当者"
+                                variant="outlined"
+                                density="compact"
+                                rounded="lg"
+                                color="primary"
+                                hide-details
+                                clearable
+                            />
+                        </template>
+                        <template v-else>
+                            <div
+                                class="text-caption text-medium-emphasis mb-1"
+                            >
+                                担当者
+                            </div>
+                            <span class="text-body-2">
+                                {{ inquiry.staff_name || '未割当' }}
+                            </span>
+                        </template>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                         <div class="text-caption text-medium-emphasis mb-1">
@@ -171,6 +275,24 @@
                         </span>
                     </v-col>
                 </v-row>
+                <div v-if="editing" class="d-flex justify-end mt-4" style="gap: 8px">
+                    <v-btn
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        @click="cancelEdit"
+                    >
+                        キャンセル
+                    </v-btn>
+                    <v-btn
+                        variant="flat"
+                        color="primary"
+                        size="small"
+                        @click="submitEdit"
+                    >
+                        確定
+                    </v-btn>
+                </div>
                 <div v-if="inquiry.internal_notes" class="mt-4">
                     <div class="text-caption text-medium-emphasis mb-1">
                         社内メモ
@@ -315,5 +437,17 @@
                 </div>
             </v-card-text>
         </v-card>
+        <!-- 更新完了ダイアログ -->
+        <v-snackbar
+            v-model="showSuccessDialog"
+            :timeout="3000"
+            color="success"
+            location="top"
+        >
+            <div class="d-flex align-center">
+                <v-icon icon="mdi-check-circle-outline" class="mr-2" />
+                問い合わせ情報を更新しました。
+            </div>
+        </v-snackbar>
     </AuthenticatedLayout>
 </template>
