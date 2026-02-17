@@ -78,3 +78,7 @@ docker compose up -d --build
 - `.gitattributes` で全ファイル LF 改行に統一（Windows環境のCRLF問題防止）
 - PHP 8.5 では opcache が組み込み済み。`docker-php-ext-install opcache` は不要
 - `docker-php-ext-install -j$(nproc)` はPHP 8.5で競合するため使わない
+
+## 開発ルール
+- バックエンド・フロントエンド共に実装後は、静的解析ツール・フォーマッターを実行する
+- バックエンドの実装後は、テストコードを実行する。
