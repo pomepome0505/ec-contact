@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -48,5 +49,15 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function inquiries(): HasMany
+    {
+        return $this->hasMany(Inquiry::class, 'staff_id');
+    }
+
+    public function inquiryMessages(): HasMany
+    {
+        return $this->hasMany(InquiryMessage::class, 'staff_id');
     }
 }
