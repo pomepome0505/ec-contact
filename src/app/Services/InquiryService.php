@@ -7,6 +7,7 @@ use App\Enums\InquiryPriority;
 use App\Enums\InquiryStatus;
 use App\Mail\InquiryReceived;
 use App\Models\Inquiry;
+use App\Models\InquiryMessage;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -55,6 +56,41 @@ class InquiryService
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function getDetail(Inquiry $inquiry): array
+    {
+        $inquiry->load(['staff', 'messages' => fn ($q) => $q->latest()->with('staff')]);
+
+        /** @var InquiryCategory $category */
+        $category = $inquiry->category;
+        /** @var InquiryStatus $status */
+        $status = $inquiry->status;
+        /** @var InquiryPriority $priority */
+        $priority = $inquiry->priority;
+        /** @var User|null $staff */
+        $staff = $inquiry->staff;
+
+        return [
+            'id' => $inquiry->id,
+            'inquiry_number' => $inquiry->inquiry_number,
+            'category_label' => $category->label(),
+            'status_label' => $status->label(),
+            'status_color' => $status->color(),
+            'priority_label' => $priority->label(),
+            'priority_color' => $priority->color(),
+            'customer_name' => $inquiry->customer_name,
+            'customer_email' => $inquiry->customer_email,
+            'order_number' => $inquiry->order_number,
+            'staff_name' => $staff?->name,
+            'internal_notes' => $inquiry->internal_notes,
+            'created_at' => $inquiry->created_at?->format('Y/m/d H:i'),
+            'updated_at' => $inquiry->updated_at?->format('Y/m/d H:i'),
+            'messages' => $this->formatMessages($inquiry),
+        ];
+    }
+
+    /**
      * @return array<string, array<int, array{value: string, label: string}>>
      */
     public function getEnumOptions(): array
@@ -73,6 +109,29 @@ class InquiryService
                 'label' => $p->label(),
             ])->all(),
         ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function formatMessages(Inquiry $inquiry): array
+    {
+        /** @var \Illuminate\Database\Eloquent\Collection<int, InquiryMessage> $messages */
+        $messages = $inquiry->messages;
+
+        return $messages->map(function (InquiryMessage $message) {
+            /** @var User|null $messageStaff */
+            $messageStaff = $message->staff;
+
+            return [
+                'id' => $message->id,
+                'message_type' => $message->message_type,
+                'subject' => $message->subject,
+                'body' => $message->body,
+                'staff_name' => $messageStaff?->name,
+                'created_at' => $message->created_at?->format('Y/m/d H:i'),
+            ];
+        })->all();
     }
 
     /**

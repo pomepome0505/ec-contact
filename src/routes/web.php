@@ -14,6 +14,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('/inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
+    Route::get('/inquiries/{inquiry}', [InquiryController::class, 'show'])->name('inquiries.show');
 });
 
 require __DIR__.'/auth.php';

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inquiry;
 use App\Services\InquiryService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,6 +21,13 @@ class InquiryController extends Controller
         return Inertia::render('Inquiry/Index', [
             'inquiries' => $this->inquiryService->getList(),
             ...$enumOptions,
+        ]);
+    }
+
+    public function show(Inquiry $inquiry): Response
+    {
+        return Inertia::render('Inquiry/Show', [
+            'inquiry' => $this->inquiryService->getDetail($inquiry),
         ]);
     }
 }
