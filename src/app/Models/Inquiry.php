@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\InquiryCategory;
+use App\Enums\InquiryPriority;
+use App\Enums\InquiryStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +30,8 @@ class Inquiry extends Model
     {
         return [
             'category' => InquiryCategory::class,
+            'status' => InquiryStatus::class,
+            'priority' => InquiryPriority::class,
         ];
     }
 

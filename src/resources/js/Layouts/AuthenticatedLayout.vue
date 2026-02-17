@@ -21,6 +21,18 @@
                 </Link>
             </v-app-bar-title>
 
+            <v-btn
+                variant="text"
+                :color="
+                    route().current('inquiries.index') ? 'primary' : 'secondary'
+                "
+                :href="route('inquiries.index')"
+                class="ml-4"
+                prepend-icon="mdi-format-list-bulleted"
+            >
+                問い合わせ一覧
+            </v-btn>
+
             <template #append>
                 <span class="text-body-2 mr-3" style="color: #475569">
                     {{ page.props.auth.user.name }}
