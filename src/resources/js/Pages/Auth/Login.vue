@@ -1,24 +1,24 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+    import GuestLayout from '@/Layouts/GuestLayout.vue';
+    import { Head, useForm } from '@inertiajs/vue3';
 
-defineProps({
-    status: {
-        type: String,
-        default: null,
-    },
-});
-
-const form = useForm({
-    login_id: '',
-    password: '',
-});
-
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+    defineProps({
+        status: {
+            type: String,
+            default: null,
+        },
     });
-};
+
+    const form = useForm({
+        login_id: '',
+        password: '',
+    });
+
+    const submit = () => {
+        form.post(route('login'), {
+            onFinish: () => form.reset('password'),
+        });
+    };
 </script>
 
 <template>
@@ -27,10 +27,8 @@ const submit = () => {
 
         <div class="text-center pt-10 pb-2 px-8">
             <v-icon icon="mdi-account-circle" size="48" color="primary" class="mb-3" />
-            <div class="text-h5" style="font-weight: 600; color: #0f172a;">ログイン</div>
-            <div class="text-body-2 mt-1" style="color: #475569;">
-                問い合わせ管理システム
-            </div>
+            <div class="text-h5" style="font-weight: 600; color: #0f172a">ログイン</div>
+            <div class="text-body-2 mt-1" style="color: #475569">問い合わせ管理システム</div>
         </div>
 
         <div class="px-8 pb-10 pt-6">
