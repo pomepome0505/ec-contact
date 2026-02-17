@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InquiryCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,13 @@ class Inquiry extends Model
         'priority',
         'internal_notes',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'category' => InquiryCategory::class,
+        ];
+    }
 
     public function staff(): BelongsTo
     {
