@@ -23,6 +23,7 @@ class UpdateInquiryStatusRequest extends FormRequest
             'status' => ['sometimes', Rule::enum(InquiryStatus::class)],
             'priority' => ['sometimes', Rule::enum(InquiryPriority::class)],
             'staff_id' => ['sometimes', 'nullable', 'exists:users,id'],
+            'internal_notes' => ['sometimes', 'nullable', 'string'],
         ];
     }
 
@@ -35,6 +36,7 @@ class UpdateInquiryStatusRequest extends FormRequest
             'status' => 'ステータス',
             'priority' => '優先度',
             'staff_id' => '担当者',
+            'internal_notes' => '社内メモ',
         ];
     }
 }

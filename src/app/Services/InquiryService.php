@@ -6,6 +6,7 @@ use App\Enums\InquiryCategory;
 use App\Enums\InquiryPriority;
 use App\Enums\InquiryStatus;
 use App\Mail\InquiryReceived;
+use App\Mail\InquiryReply;
 use App\Models\Inquiry;
 use App\Models\InquiryMessage;
 use App\Models\User;
@@ -122,6 +123,26 @@ class InquiryService
         $inquiry->update($validated);
 
         return $inquiry->refresh();
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function reply(int $inquiryId, array $validated, int $staffId): InquiryMessage
+    {
+        $inquiry = Inquiry::findOrFail($inquiryId);
+
+        /** @var InquiryMessage $message */
+        $message = $inquiry->messages()->create([
+            'staff_id' => $staffId,
+            'message_type' => 'staff_reply',
+            'subject' => $validated['subject'],
+            'body' => $validated['body'],
+        ]);
+
+        Mail::to($inquiry->customer_email)->send(new InquiryReply($inquiry, $message));
+
+        return $message;
     }
 
     /**

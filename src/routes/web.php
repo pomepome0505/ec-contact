@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
     Route::get('/inquiries/{inquiry_id}', [InquiryController::class, 'show'])->name('inquiries.show');
     Route::patch('/inquiries/{inquiry_id}', [InquiryController::class, 'update'])->name('inquiries.update');
+    Route::post('/inquiries/{inquiry_id}/reply', [InquiryController::class, 'reply'])->name('inquiries.reply');
 });
 
 require __DIR__.'/auth.php';

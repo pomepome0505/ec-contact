@@ -88,6 +88,22 @@ class InquiryUpdateTest extends TestCase
         ]);
     }
 
+    public function test_社内メモを更新できる(): void
+    {
+        $user = User::factory()->create();
+        $inquiry = Inquiry::factory()->create(['internal_notes' => null]);
+
+        $response = $this->actingAs($user)->patch("/inquiries/{$inquiry->id}", [
+            'internal_notes' => '対応メモの内容',
+        ]);
+
+        $response->assertRedirect(route('inquiries.show', $inquiry));
+        $this->assertDatabaseHas('inquiries', [
+            'id' => $inquiry->id,
+            'internal_notes' => '対応メモの内容',
+        ]);
+    }
+
     public function test_不正なステータス値で422エラーになる(): void
     {
         $user = User::factory()->create();

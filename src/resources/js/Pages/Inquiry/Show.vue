@@ -16,6 +16,10 @@
     const editing = ref(false);
     const editForm = ref({});
     const showSuccessDialog = ref(false);
+    const successMessage = ref('');
+    const showReplyDialog = ref(false);
+    const replyForm = ref({ subject: '', body: '' });
+    const replySubmitting = ref(false);
 
     const isLong = (text) => text && text.length > TEXT_LIMIT;
     const truncate = (text) => text.slice(0, TEXT_LIMIT) + '...';
@@ -29,6 +33,7 @@
             status: props.inquiry.status,
             priority: props.inquiry.priority,
             staff_id: props.inquiry.staff_id,
+            internal_notes: props.inquiry.internal_notes || '',
         };
         editing.value = true;
     };
@@ -45,10 +50,7 @@
                 preserveScroll: true,
                 onSuccess: () => {
                     editing.value = false;
-                    showSuccessDialog.value = true;
-                    setTimeout(() => {
-                        showSuccessDialog.value = false;
-                    }, 3000);
+                    showNotification('問い合わせ情報を更新しました。');
                 },
             },
         );
@@ -81,8 +83,39 @@
         return icons[type] || 'mdi-message-outline';
     };
 
+    const showNotification = (message) => {
+        successMessage.value = message;
+        showSuccessDialog.value = true;
+        setTimeout(() => {
+            showSuccessDialog.value = false;
+        }, 3000);
+    };
+
     const goBack = () => {
         router.get(route('inquiries.index'));
+    };
+
+    const openReplyDialog = () => {
+        replyForm.value = { subject: '', body: '' };
+        showReplyDialog.value = true;
+    };
+
+    const submitReply = () => {
+        replySubmitting.value = true;
+        router.post(
+            route('inquiries.reply', props.inquiry.id),
+            replyForm.value,
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    showReplyDialog.value = false;
+                    showNotification('返信メールを送信しました。');
+                },
+                onFinish: () => {
+                    replySubmitting.value = false;
+                },
+            },
+        );
     };
 
 </script>
@@ -293,43 +326,77 @@
                         確定
                     </v-btn>
                 </div>
-                <div v-if="inquiry.internal_notes" class="mt-4">
+                <div
+                    v-if="editing || inquiry.internal_notes"
+                    class="mt-4"
+                >
                     <div class="text-caption text-medium-emphasis mb-1">
                         社内メモ
                     </div>
-                    <div
-                        class="text-body-2 pa-3 rounded-lg"
-                        style="
-                            background-color: #f8fafc;
-                            border: 1px solid #e2e8f0;
-                            white-space: pre-wrap;
-                        "
-                    >
-                        {{
-                            isLong(inquiry.internal_notes) && !expandedNotes
-                                ? truncate(inquiry.internal_notes)
-                                : inquiry.internal_notes
-                        }}
-                        <v-btn
-                            v-if="isLong(inquiry.internal_notes)"
-                            variant="text"
+                    <template v-if="editing">
+                        <v-textarea
+                            v-model="editForm.internal_notes"
+                            variant="outlined"
+                            density="compact"
+                            rounded="lg"
                             color="primary"
-                            size="x-small"
-                            class="ml-1"
-                            @click="expandedNotes = !expandedNotes"
+                            hide-details
+                            rows="3"
+                            auto-grow
+                            placeholder="社内メモを入力..."
+                        />
+                    </template>
+                    <template v-else>
+                        <div
+                            class="text-body-2 pa-3 rounded-lg"
+                            style="
+                                background-color: #f8fafc;
+                                border: 1px solid #e2e8f0;
+                                white-space: pre-wrap;
+                            "
                         >
-                            {{ expandedNotes ? '閉じる' : 'もっと見る' }}
-                        </v-btn>
-                    </div>
+                            {{
+                                isLong(inquiry.internal_notes) &&
+                                !expandedNotes
+                                    ? truncate(inquiry.internal_notes)
+                                    : inquiry.internal_notes
+                            }}
+                            <v-btn
+                                v-if="isLong(inquiry.internal_notes)"
+                                variant="text"
+                                color="primary"
+                                size="x-small"
+                                class="ml-1"
+                                @click="expandedNotes = !expandedNotes"
+                            >
+                                {{
+                                    expandedNotes ? '閉じる' : 'もっと見る'
+                                }}
+                            </v-btn>
+                        </div>
+                    </template>
                 </div>
             </v-card-text>
         </v-card>
 
         <!-- メッセージ履歴 -->
         <v-card style="border: 1px solid #e2e8f0">
-            <v-card-title class="text-subtitle-1 font-weight-bold pa-4 pb-2">
-                <v-icon icon="mdi-message-text-outline" class="mr-2" />
-                メッセージ履歴
+            <v-card-title
+                class="d-flex align-center justify-space-between pa-4 pb-2"
+            >
+                <div class="text-subtitle-1 font-weight-bold">
+                    <v-icon icon="mdi-message-text-outline" class="mr-2" />
+                    メッセージ履歴
+                </div>
+                <v-btn
+                    variant="flat"
+                    color="primary"
+                    size="small"
+                    prepend-icon="mdi-reply"
+                    @click="openReplyDialog"
+                >
+                    返信
+                </v-btn>
             </v-card-title>
             <v-divider />
             <v-card-text class="pa-4">
@@ -437,7 +504,64 @@
                 </div>
             </v-card-text>
         </v-card>
-        <!-- 更新完了ダイアログ -->
+        <!-- 返信ダイアログ -->
+        <v-dialog v-model="showReplyDialog" max-width="600" persistent>
+            <v-card>
+                <v-card-title class="text-subtitle-1 font-weight-bold pa-4">
+                    <v-icon icon="mdi-reply" class="mr-2" />
+                    返信メール送信
+                </v-card-title>
+                <v-divider />
+                <v-card-text class="pa-4">
+                    <v-text-field
+                        v-model="replyForm.subject"
+                        label="件名"
+                        variant="outlined"
+                        density="compact"
+                        rounded="lg"
+                        color="primary"
+                        class="mb-3"
+                        hide-details
+                    />
+                    <v-textarea
+                        v-model="replyForm.body"
+                        label="本文"
+                        variant="outlined"
+                        density="compact"
+                        rounded="lg"
+                        color="primary"
+                        rows="8"
+                        hide-details
+                    />
+                </v-card-text>
+                <v-divider />
+                <v-card-actions class="pa-4">
+                    <v-spacer />
+                    <v-btn
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        :disabled="replySubmitting"
+                        @click="showReplyDialog = false"
+                    >
+                        キャンセル
+                    </v-btn>
+                    <v-btn
+                        variant="flat"
+                        color="primary"
+                        size="small"
+                        prepend-icon="mdi-send"
+                        :loading="replySubmitting"
+                        :disabled="!replyForm.subject || !replyForm.body"
+                        @click="submitReply"
+                    >
+                        送信
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- 通知 -->
         <v-snackbar
             v-model="showSuccessDialog"
             :timeout="3000"
@@ -446,7 +570,7 @@
         >
             <div class="d-flex align-center">
                 <v-icon icon="mdi-check-circle-outline" class="mr-2" />
-                問い合わせ情報を更新しました。
+                {{ successMessage }}
             </div>
         </v-snackbar>
     </AuthenticatedLayout>
