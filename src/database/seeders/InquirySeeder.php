@@ -30,13 +30,7 @@ class InquirySeeder extends Seeder
         // 各問い合わせにメッセージを紐付け
         foreach ($inquiries as $inquiry) {
             // 最初の問い合わせメッセージ（必ず1件）
-            InquiryMessage::factory()->create([
-                'inquiry_id' => $inquiry->id,
-                'staff_id' => null,
-                'message_type' => 'initial_inquiry',
-                'created_at' => $inquiry->created_at,
-                'updated_at' => $inquiry->created_at,
-            ]);
+            $this->createMessage($inquiry, 'initial_inquiry', null, $inquiry->created_at);
 
             // 追加のやり取り（0〜3件）
             $replyCount = fake()->numberBetween(0, 3);
@@ -46,25 +40,22 @@ class InquirySeeder extends Seeder
                 $lastDate = fake()->dateTimeBetween($lastDate, 'now');
 
                 if ($i % 2 === 0) {
-                    // 担当者からの返信
-                    InquiryMessage::factory()->create([
-                        'inquiry_id' => $inquiry->id,
-                        'staff_id' => $inquiry->staff_id ?? fake()->randomElement($staffIds),
-                        'message_type' => 'staff_reply',
-                        'created_at' => $lastDate,
-                        'updated_at' => $lastDate,
-                    ]);
+                    $staffId = $inquiry->staff_id ?? fake()->randomElement($staffIds);
+                    $this->createMessage($inquiry, 'staff_reply', $staffId, $lastDate);
                 } else {
-                    // 顧客からの返信
-                    InquiryMessage::factory()->create([
-                        'inquiry_id' => $inquiry->id,
-                        'staff_id' => null,
-                        'message_type' => 'customer_reply',
-                        'created_at' => $lastDate,
-                        'updated_at' => $lastDate,
-                    ]);
+                    $this->createMessage($inquiry, 'customer_reply', null, $lastDate);
                 }
             }
         }
+    }
+
+    private function createMessage(Inquiry $inquiry, string $messageType, ?int $staffId, mixed $date): void
+    {
+        InquiryMessage::factory()->forType($messageType)->create([
+            'inquiry_id' => $inquiry->id,
+            'staff_id' => $staffId,
+            'created_at' => $date,
+            'updated_at' => $date,
+        ]);
     }
 }
