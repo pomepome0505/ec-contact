@@ -326,10 +326,7 @@
                         確定
                     </v-btn>
                 </div>
-                <div
-                    v-if="editing || inquiry.internal_notes"
-                    class="mt-4"
-                >
+                <div class="mt-4">
                     <div class="text-caption text-medium-emphasis mb-1">
                         社内メモ
                     </div>
@@ -355,24 +352,34 @@
                                 white-space: pre-wrap;
                             "
                         >
-                            {{
-                                isLong(inquiry.internal_notes) &&
-                                !expandedNotes
-                                    ? truncate(inquiry.internal_notes)
-                                    : inquiry.internal_notes
-                            }}
-                            <v-btn
-                                v-if="isLong(inquiry.internal_notes)"
-                                variant="text"
-                                color="primary"
-                                size="x-small"
-                                class="ml-1"
-                                @click="expandedNotes = !expandedNotes"
-                            >
+                            <template v-if="inquiry.internal_notes">
                                 {{
-                                    expandedNotes ? '閉じる' : 'もっと見る'
+                                    isLong(inquiry.internal_notes) &&
+                                    !expandedNotes
+                                        ? truncate(inquiry.internal_notes)
+                                        : inquiry.internal_notes
                                 }}
-                            </v-btn>
+                                <v-btn
+                                    v-if="isLong(inquiry.internal_notes)"
+                                    variant="text"
+                                    color="primary"
+                                    size="x-small"
+                                    class="ml-1"
+                                    @click="expandedNotes = !expandedNotes"
+                                >
+                                    {{
+                                        expandedNotes
+                                            ? '閉じる'
+                                            : 'もっと見る'
+                                    }}
+                                </v-btn>
+                            </template>
+                            <span
+                                v-else
+                                class="text-medium-emphasis"
+                            >
+                                メモはありません
+                            </span>
                         </div>
                     </template>
                 </div>
