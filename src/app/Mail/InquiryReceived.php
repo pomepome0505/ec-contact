@@ -29,7 +29,7 @@ class InquiryReceived extends Mailable
         $message = $this->inquiry->messages()->where('message_type', 'initial_inquiry')->first();
 
         return new Content(
-            view: 'emails.inquiry-received',
+            text: 'emails.inquiry-received',
             with: [
                 'inquiry' => $this->inquiry,
                 'initialMessage' => $message,
