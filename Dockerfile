@@ -1,5 +1,5 @@
 # ==============================================================================
-# Base Stage: PHP 8.5 + Node.js 24 + Nginx + Supervisor
+# Base Stage: PHP 8.5 + Nginx + Supervisor
 # ==============================================================================
 FROM php:8.5-fpm AS base
 
@@ -24,12 +24,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js 24
-RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -43,6 +37,12 @@ WORKDIR /var/www/html
 # Development Stage
 # ==============================================================================
 FROM base AS development
+
+# Node.js 24 (development/build only)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Development tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -79,6 +79,12 @@ CMD ["/usr/local/bin/entrypoint-dev.sh"]
 # Production Build Stage: Install dependencies & build assets
 # ==============================================================================
 FROM base AS production-build
+
+# Node.js 24 (build only - not included in production image)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
