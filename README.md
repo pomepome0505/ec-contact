@@ -37,9 +37,9 @@
 | 商品リコール | 年1-2回 | 0.8 req/s |
 
 ## 使用言語・開発環境
-- 言語: PHP 8.5／JavaScript
-- フレームワーク: Laravel 12／Vue.js  
-- DB：RDS (MariaDB11.8)  
+- 言語: PHP 8.5.3／JavaScript
+- フレームワーク: Laravel 12.51.0／Vue.js 3.5.28 
+- DB：RDS (MariaDB11.8.5) 
 - インフラ：AWS (ECS／Fargate／SES等)／Docker  
 - Iac：Terraform  
 - CI／CD：GitHub Actions  
@@ -107,7 +107,7 @@
 ### なぜRDS (MariaDB)か
 
 - **マネージドサービスの利便性**: パッチ適用、メンテナンス等の運用負荷削減
-- **Laravelとの親和性**: MySQLと高い互換性、標準サポート
+- **Laravelとの親和性**: 高い互換性、標準サポート
 
 ## 6. Datadog
 
