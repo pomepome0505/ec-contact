@@ -33,6 +33,13 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+# RDSマスターパスワード
+variable "db_password" {
+  description = "RDS master password"
+  type        = string
+  sensitive   = true
+}
+
 # アベイラビリティゾーン
 variable "availability_zones" {
   description = "使用するアベイラビリティゾーンのリスト（マルチAZ構成）"
