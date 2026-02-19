@@ -37,14 +37,14 @@
 | 商品リコール | 年1-2回 | 0.8 req/s |
 
 ## 使用言語・開発環境
-- 言語: PHP 8.5.3／JavaScript
-- フレームワーク: Laravel 12.51.0／Vue.js 3.5.28 
-- DB：RDS (MariaDB11.8.5) 
-- インフラ：AWS (ECS／Fargate／SES等)／Docker  
-- Iac：Terraform  
-- CI／CD：GitHub Actions  
-- モニタリング／オブザーバビリティ：Datadog／CloudWatch  
-- 開発支援：Claude／Claude Code
+- **言語**: PHP 8.5.3／JavaScript
+- **フレームワーク**: Laravel 12.51.0／Vue.js 3.5.28 
+- **DB**：RDS (MariaDB11.8.5) 
+- **インフラ**：AWS (ECS／Fargate／SES等)／Docker  
+- **Iac**：Terraform  
+- **CI／CD**：GitHub Actions  
+- **モニタリング**／オブザーバビリティ：Datadog／CloudWatch  
+- **開発支援**：Claude／Claude Code
 
 # 技術選定理由
 
@@ -80,9 +80,9 @@
 - **コンテナ化のメリット**: 環境の統一（ローカル・CI・本番で同じイメージ）
 
 **他の選択肢**
-- EC2: サーバー管理の運用負荷、パッチ適用等の作業が必要
-- EKS: 学習コスト・運用コストが高く、小規模システムには過剰
-- Lambda: Webアプリケーションの実行には不向き
+- **EC2**: サーバー管理の運用負荷、パッチ適用等の作業が必要
+- **EKS**: 学習コスト・運用コストが高く、小規模システムには過剰
+- **Lambda**: Webアプリケーションの実行には不向き
 
 ## 3. Terraform
 
