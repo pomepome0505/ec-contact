@@ -85,3 +85,4 @@ docker compose up -d --build
 - バックエンドの業務ロジックはServiceクラス、HTTP層の実装はControllerクラスに実装する
 - AWSリソースの命名規則は、lmi-prod-{サービス名}-{number（同じサービスを複数使用する場合などに使う）}
 - Terraformを使用して、AWSでのインフラ構築を行う
+- Dockerイメージの更新・composerやnpmの依存関係を更新した際はOSV-Scannerを使って解析し、脆弱性があれば改善提案をする。
