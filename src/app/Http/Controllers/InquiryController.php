@@ -19,23 +19,23 @@ class InquiryController extends Controller
 
     public function index(Request $request): Response
     {
-        $enumOptions = $this->inquiryService->getEnumOptions();
+        $selectOptions = $this->inquiryService->getSelectOptions();
 
         return Inertia::render('Inquiry/Index', [
             'inquiries' => $this->inquiryService->getList(),
-            ...$enumOptions,
+            ...$selectOptions,
         ]);
     }
 
     public function show(int $inquiry_id): Response
     {
         $inquiry = Inquiry::findOrFail($inquiry_id);
-        $enumOptions = $this->inquiryService->getEnumOptions();
+        $selectOptions = $this->inquiryService->getSelectOptions();
 
         return Inertia::render('Inquiry/Show', [
             'inquiry' => $this->inquiryService->getDetail($inquiry),
             'staffs' => $this->inquiryService->getStaffList(),
-            ...$enumOptions,
+            ...$selectOptions,
         ]);
     }
 

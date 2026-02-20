@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Enums\InquiryCategory;
 use App\Enums\InquiryPriority;
 use App\Enums\InquiryStatus;
 use App\Mail\InquiryReceived;
 use App\Mail\InquiryReply;
 use App\Models\Inquiry;
+use App\Models\InquiryCategory;
 use App\Models\InquiryMessage;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -22,13 +22,12 @@ class InquiryService
 
     public function getList(): LengthAwarePaginator
     {
-        $paginator = Inquiry::with('staff')
+        $paginator = Inquiry::with(['staff', 'category'])
             ->latest()
             ->paginate(15);
 
-        $paginator->getCollection()->transform(function (Inquiry $inquiry) {
-            /** @var InquiryCategory $category */
-            $category = $inquiry->category;
+        $paginator->getCollection()->transform(function (mixed $inquiry) {
+            /** @var Inquiry $inquiry */
             /** @var InquiryStatus $status */
             $status = $inquiry->status;
             /** @var InquiryPriority $priority */
@@ -39,8 +38,8 @@ class InquiryService
             return [
                 'id' => $inquiry->id,
                 'inquiry_number' => $inquiry->inquiry_number,
-                'category' => $category->value,
-                'category_label' => $category->label(),
+                'category' => $inquiry->category_id,
+                'category_label' => $inquiry->category?->name,
                 'status' => $status->value,
                 'status_label' => $status->label(),
                 'status_color' => $status->color(),
@@ -61,10 +60,8 @@ class InquiryService
      */
     public function getDetail(Inquiry $inquiry): array
     {
-        $inquiry->load(['staff', 'messages' => fn ($q) => $q->latest()->with('staff')]);
+        $inquiry->load(['staff', 'category', 'messages' => fn ($q) => $q->latest()->with('staff')]);
 
-        /** @var InquiryCategory $category */
-        $category = $inquiry->category;
         /** @var InquiryStatus $status */
         $status = $inquiry->status;
         /** @var InquiryPriority $priority */
@@ -75,7 +72,7 @@ class InquiryService
         return [
             'id' => $inquiry->id,
             'inquiry_number' => $inquiry->inquiry_number,
-            'category_label' => $category->label(),
+            'category_label' => $inquiry->category?->name,
             'status' => $status->value,
             'status_label' => $status->label(),
             'status_color' => $status->color(),
@@ -95,15 +92,15 @@ class InquiryService
     }
 
     /**
-     * @return array<string, array<int, array{value: string, label: string}>>
+     * @return array<string, array<int, array{value: int|string, label: string}>>
      */
-    public function getEnumOptions(): array
+    public function getSelectOptions(): array
     {
         return [
-            'categories' => collect(InquiryCategory::cases())->map(fn (InquiryCategory $c) => [
-                'value' => $c->value,
-                'label' => $c->label(),
-            ])->all(),
+            'categories' => InquiryCategory::active()->ordered()
+                ->get(['id', 'name'])
+                ->map(fn (InquiryCategory $c) => ['value' => $c->id, 'label' => $c->name])
+                ->all(),
             'statuses' => collect(InquiryStatus::cases())->map(fn (InquiryStatus $s) => [
                 'value' => $s->value,
                 'label' => $s->label(),
@@ -150,7 +147,8 @@ class InquiryService
      */
     public function getStaffList(): array
     {
-        return User::orderBy('name')
+        return User::where('is_active', true)
+            ->orderBy('name')
             ->get(['id', 'name'])
             ->map(fn (User $user) => [
                 'id' => $user->id,
@@ -206,7 +204,7 @@ class InquiryService
 
                     $inquiry = Inquiry::create([
                         'inquiry_number' => $inquiryNumber,
-                        'category' => $validated['category'],
+                        'category_id' => $validated['category_id'],
                         'order_number' => $validated['order_number'] ?? null,
                         'customer_name' => $validated['customer_name'],
                         'customer_email' => $validated['customer_email'],

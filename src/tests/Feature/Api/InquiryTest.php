@@ -3,6 +3,8 @@
 namespace Tests\Feature\Api;
 
 use App\Mail\InquiryReceived;
+use App\Models\InquiryCategory;
+use Database\Seeders\InquiryCategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -11,10 +13,16 @@ class InquiryTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(InquiryCategorySeeder::class);
+    }
+
     private function validData(array $overrides = []): array
     {
         return array_merge([
-            'category' => 'product',
+            'category_id' => InquiryCategory::first()->id,
             'order_number' => 'ORD-12345678',
             'subject' => 'テスト問い合わせ',
             'body' => '商品について質問があります。',
@@ -37,10 +45,11 @@ class InquiryTest extends TestCase
     {
         Mail::fake();
 
+        $category = InquiryCategory::first();
         $this->postJson('/api/inquiries', $this->validData());
 
         $this->assertDatabaseHas('inquiries', [
-            'category' => 'product',
+            'category_id' => $category->id,
             'customer_name' => 'テスト太郎',
             'customer_email' => 'test@example.com',
             'status' => 'pending',
@@ -96,7 +105,7 @@ class InquiryTest extends TestCase
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors([
-                'category',
+                'category_id',
                 'subject',
                 'body',
                 'customer_name',
@@ -104,14 +113,14 @@ class InquiryTest extends TestCase
             ]);
     }
 
-    public function test_不正なカテゴリだと422エラーになる(): void
+    public function test_存在しないカテゴリ_idだと422エラーになる(): void
     {
         $response = $this->postJson('/api/inquiries', $this->validData([
-            'category' => 'invalid',
+            'category_id' => 99999,
         ]));
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['category']);
+            ->assertJsonValidationErrors(['category_id']);
     }
 
     public function test_不正なメールアドレス形式だと422エラーになる(): void

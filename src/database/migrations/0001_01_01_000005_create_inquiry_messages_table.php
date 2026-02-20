@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inquiry_messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('inquiry_id')->index()->constrained('inquiries')->cascadeOnDelete();
-            $table->foreignId('staff_id')->nullable()->index()->constrained('users')->nullOnDelete();
+            $table->foreignId('staff_id')->nullable()->index()->constrained('users')->restrictOnDelete();
             $table->string('message_type', 20)->comment('initial_inquiry, customer_reply, staff_reply');
             $table->string('subject', 200);
             $table->text('body');

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\InquiryCategory;
 use App\Enums\InquiryPriority;
 use App\Enums\InquiryStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property-read InquiryCategory|null $category
+ */
 class Inquiry extends Model
 {
     use HasFactory;
@@ -18,7 +20,7 @@ class Inquiry extends Model
         'inquiry_number',
         'staff_id',
         'order_number',
-        'category',
+        'category_id',
         'customer_name',
         'customer_email',
         'status',
@@ -29,7 +31,6 @@ class Inquiry extends Model
     protected function casts(): array
     {
         return [
-            'category' => InquiryCategory::class,
             'status' => InquiryStatus::class,
             'priority' => InquiryPriority::class,
         ];
@@ -38,6 +39,11 @@ class Inquiry extends Model
     public function staff(): BelongsTo
     {
         return $this->belongsTo(User::class, 'staff_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(InquiryCategory::class, 'category_id');
     }
 
     public function messages(): HasMany

@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Enums\InquiryCategory;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreInquiryRequest extends FormRequest
 {
@@ -19,7 +17,7 @@ class StoreInquiryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => ['required', Rule::enum(InquiryCategory::class)],
+            'category_id' => ['required', 'exists:inquiry_categories,id'],
             'order_number' => ['nullable', 'string', 'max:50'],
             'subject' => ['required', 'string', 'max:200'],
             'body' => ['required', 'string'],
@@ -34,7 +32,7 @@ class StoreInquiryRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'category' => 'カテゴリ',
+            'category_id' => 'カテゴリ',
             'order_number' => '注文番号',
             'subject' => '件名',
             'body' => 'お問い合わせ内容',

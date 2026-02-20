@@ -4,12 +4,19 @@ namespace Tests\Feature;
 
 use App\Models\Inquiry;
 use App\Models\User;
+use Database\Seeders\InquiryCategorySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class InquiryListTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(InquiryCategorySeeder::class);
+    }
 
     public function test_未ログインだとログイン画面にリダイレクトされる(): void
     {

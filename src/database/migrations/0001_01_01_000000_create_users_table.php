@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('login_id', 50)->unique();
             $table->string('name');
             $table->string('password');
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_admin')->default(false);
+            $table->timestamp('temporary_password_expires_at')->nullable();
             $table->timestamps();
         });
 

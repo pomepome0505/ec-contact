@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('inquiries', function (Blueprint $table) {
             $table->id();
             $table->string('inquiry_number', 20)->unique();
-            $table->foreignId('staff_id')->nullable()->index()->constrained('users')->nullOnDelete();
+            $table->foreignId('staff_id')->nullable()->index()->constrained('users')->restrictOnDelete();
             $table->string('order_number', 50)->nullable();
-            $table->string('category', 20)->index()->comment('product, order, shipping, return, system, other');
+            $table->foreignId('category_id')->index()->constrained('inquiry_categories')->restrictOnDelete();
             $table->string('customer_name', 100);
             $table->string('customer_email', 100);
             $table->string('status', 20)->default('pending')->index()->comment('pending, in_progress, resolved, closed');

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\InquiryCategory;
+use App\Models\InquiryCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -43,7 +43,7 @@ class InquiryFactory extends Factory
             'inquiry_number' => 'INQ-'.$date->format('Ymd').'-'.str_pad($seq, 4, '0', STR_PAD_LEFT),
             'staff_id' => fake()->optional(0.7)->randomElement(User::pluck('id')->toArray() ?: [null]),
             'order_number' => fake()->optional(0.6)->numerify('ORD-########'),
-            'category' => fake()->randomElement(InquiryCategory::cases()),
+            'category_id' => fake()->randomElement(InquiryCategory::pluck('id')->toArray() ?: range(1, 6)),
             'customer_name' => fake()->randomElement(self::CUSTOMER_NAMES),
             'customer_email' => fake()->safeEmail(),
             'status' => fake()->randomElement(['pending', 'in_progress', 'resolved', 'closed']),

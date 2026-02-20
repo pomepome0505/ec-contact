@@ -49,6 +49,26 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (! $user->is_active) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'login_id' => 'このアカウントは無効化されています。',
+            ]);
+        }
+
+        if ($user->temporary_password_expires_at && $user->temporary_password_expires_at->isPast()) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'login_id' => '一時パスワードの有効期限が切れています。管理者に連絡してください。',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

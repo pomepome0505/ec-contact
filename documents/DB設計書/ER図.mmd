@@ -1,14 +1,24 @@
 erDiagram
+    inquiry_categories ||--o{ inquiries : "category_id"
     inquiries ||--o{ inquiry_messages : "inquiry_id"
     users ||--o{ inquiries : "staff_id"
     users ||--o{ inquiry_messages : "staff_id"
-    
+
+    inquiry_categories {
+        bigint id PK "主キー"
+        varchar name "カテゴリ名"
+        integer display_order "表示順"
+        boolean is_active "有効フラグ"
+        timestamp created_at "作成日時"
+        timestamp updated_at "更新日時"
+    }
+
     inquiries {
         bigint id PK "主キー"
         varchar inquiry_number UK "受付番号 (例: INQ-20260213-0001)"
         bigint staff_id FK "担当者ID (NULL可)"
         varchar order_number "注文番号 (任意)"
-        varchar category "カテゴリ (product/order/shipping/return/system/other)"
+        bigint category_id FK "カテゴリID"
         varchar customer_name "顧客氏名"
         varchar customer_email "顧客メールアドレス"
         varchar status "ステータス (pending/in_progress/resolved/closed)"
@@ -17,16 +27,19 @@ erDiagram
         timestamp created_at "作成日時"
         timestamp updated_at "更新日時"
     }
-    
+
     users {
         bigint id PK "主キー"
         varchar login_id UK "ログインID"
         varchar name "担当者氏名"
         varchar password "パスワード (ハッシュ化)"
+        boolean is_active "有効フラグ"
+        boolean is_admin "管理者フラグ"
+        timestamp temporary_password_expires_at "一時パスワード有効期限 (NULL可)"
         timestamp created_at "作成日時"
         timestamp updated_at "更新日時"
     }
-    
+
     inquiry_messages {
         bigint id PK "主キー"
         bigint inquiry_id FK "問い合わせID"

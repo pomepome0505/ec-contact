@@ -11,6 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $login_id
  * @property string $name
  * @property string $password
+ * @property bool $is_active
+ * @property bool $is_admin
+ * @property \Carbon\Carbon|null $temporary_password_expires_at
  */
 class User extends Authenticatable
 {
@@ -26,6 +29,9 @@ class User extends Authenticatable
         'login_id',
         'name',
         'password',
+        'is_active',
+        'is_admin',
+        'temporary_password_expires_at',
     ];
 
     /**
@@ -54,6 +60,9 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_admin' => 'boolean',
+            'temporary_password_expires_at' => 'datetime',
         ];
     }
 

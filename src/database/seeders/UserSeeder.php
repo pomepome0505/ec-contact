@@ -16,14 +16,14 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $staffNames = [
-            ['login_id' => 'tanaka', 'name' => '田中 太郎'],
-            ['login_id' => 'suzuki', 'name' => '鈴木 花子'],
-            ['login_id' => 'sato', 'name' => '佐藤 一郎'],
-            ['login_id' => 'yamada', 'name' => '山田 美咲'],
-            ['login_id' => 'takahashi', 'name' => '高橋 健太'],
-            ['login_id' => 'watanabe', 'name' => '渡辺 由美'],
-            ['login_id' => 'ito', 'name' => '伊藤 大輔'],
-            ['login_id' => 'nakamura', 'name' => '中村 あかり'],
+            ['login_id' => 'tanaka', 'name' => '田中 太郎', 'is_admin' => true],
+            ['login_id' => 'suzuki', 'name' => '鈴木 花子', 'is_admin' => true],
+            ['login_id' => 'sato', 'name' => '佐藤 一郎', 'is_admin' => false],
+            ['login_id' => 'yamada', 'name' => '山田 美咲', 'is_admin' => false],
+            ['login_id' => 'takahashi', 'name' => '高橋 健太', 'is_admin' => false],
+            ['login_id' => 'watanabe', 'name' => '渡辺 由美', 'is_admin' => false],
+            ['login_id' => 'ito', 'name' => '伊藤 大輔', 'is_admin' => false],
+            ['login_id' => 'nakamura', 'name' => '中村 あかり', 'is_admin' => false],
         ];
 
         foreach ($staffNames as $staff) {

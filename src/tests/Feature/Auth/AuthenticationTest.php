@@ -42,6 +42,49 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_無効化されたユーザーはログインできない(): void
+    {
+        $user = User::factory()->create(['is_active' => false]);
+
+        $response = $this->post('/login', [
+            'login_id' => $user->login_id,
+            'password' => 'password',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors('login_id');
+    }
+
+    public function test_一時パスワード期限切れでログインできない(): void
+    {
+        $user = User::factory()->create([
+            'temporary_password_expires_at' => now()->subDay(),
+        ]);
+
+        $response = $this->post('/login', [
+            'login_id' => $user->login_id,
+            'password' => 'password',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors('login_id');
+    }
+
+    public function test_一時パスワード期限内でログインできる(): void
+    {
+        $user = User::factory()->create([
+            'temporary_password_expires_at' => now()->addDays(7),
+        ]);
+
+        $response = $this->post('/login', [
+            'login_id' => $user->login_id,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect('/');
+    }
+
     public function test_users_can_logout(): void
     {
         $user = User::factory()->create();

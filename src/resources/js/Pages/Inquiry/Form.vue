@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 
 const formRef = ref(null);
 const formValid = ref(false);
@@ -8,19 +8,22 @@ const submitted = ref(false);
 const inquiryNumber = ref('');
 const serverError = ref('');
 
-const categories = [
-    { label: '商品について', value: 'product' },
-    { label: '注文について', value: 'order' },
-    { label: '配送について', value: 'shipping' },
-    { label: '返品・交換について', value: 'return' },
-    { label: 'システムについて', value: 'system' },
-    { label: 'その他', value: 'other' },
-];
+const categories = ref([]);
+
+onMounted(async () => {
+    try {
+        const response = await fetch('/api/categories');
+        const data = await response.json();
+        categories.value = data.map((c) => ({ label: c.name, value: c.id }));
+    } catch {
+        categories.value = [];
+    }
+});
 
 const form = reactive({
     customer_name: '',
     customer_email: '',
-    category: null,
+    category_id: null,
     order_number: '',
     subject: '',
     body: '',
@@ -38,7 +41,7 @@ const rules = {
         (v) => emailRegex.test(v) || '正しいメールアドレスを入力してください',
         (v) => (v && v.length <= 100) || '100文字以内で入力してください',
     ],
-    category: [(v) => !!v || 'カテゴリを選択してください'],
+    category_id: [(v) => !!v || 'カテゴリを選択してください'],
     subject: [
         (v) => !!v || '件名を入力してください',
         (v) => (v && v.length <= 200) || '200文字以内で入力してください',
@@ -90,7 +93,7 @@ function resetForm() {
     inquiryNumber.value = '';
     form.customer_name = '';
     form.customer_email = '';
-    form.category = null;
+    form.category_id = null;
     form.order_number = '';
     form.subject = '';
     form.body = '';
@@ -156,12 +159,12 @@ function resetForm() {
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <v-select
-                                    v-model="form.category"
+                                    v-model="form.category_id"
                                     label="カテゴリ"
                                     :items="categories"
                                     item-title="label"
                                     item-value="value"
-                                    :rules="rules.category"
+                                    :rules="rules.category_id"
                                     variant="outlined"
                                     density="comfortable"
                                     rounded="lg"
