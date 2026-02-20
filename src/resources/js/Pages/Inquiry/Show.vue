@@ -91,10 +91,6 @@
         }, 3000);
     };
 
-    const goBack = () => {
-        router.get(route('inquiries.index'));
-    };
-
     const openReplyDialog = () => {
         replyForm.value = { subject: '', body: '' };
         showReplyDialog.value = true;
@@ -124,29 +120,25 @@
     <AuthenticatedLayout>
         <Head :title="`問い合わせ ${inquiry.inquiry_number}`" />
 
-        <div class="d-flex align-center justify-space-between mb-4">
-            <div class="d-flex align-center">
-                <v-icon
-                    icon="mdi-text-box-outline"
-                    color="primary"
-                    class="mr-3"
-                />
-                <span
-                    class="text-h6"
-                    style="font-weight: 600; color: #0f172a"
-                >
-                    {{ inquiry.inquiry_number }}
-                </span>
-            </div>
+        <div class="d-flex align-center mb-4">
             <v-btn
-                variant="outlined"
+                variant="text"
                 color="secondary"
-                size="small"
-                prepend-icon="mdi-arrow-left"
-                @click="goBack"
+                icon="mdi-arrow-left"
+                :href="route('inquiries.index')"
+                class="mr-2"
+            />
+            <v-icon
+                icon="mdi-text-box-outline"
+                color="primary"
+                class="mr-3"
+            />
+            <span
+                class="text-h6"
+                style="font-weight: 600; color: #0f172a"
             >
-                一覧に戻る
-            </v-btn>
+                {{ inquiry.inquiry_number }}
+            </span>
         </div>
 
         <!-- 基本情報 -->

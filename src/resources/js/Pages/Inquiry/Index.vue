@@ -65,8 +65,6 @@
                 :items="inquiries.data"
                 :items-per-page="inquiries.per_page"
                 hide-default-footer
-                hover
-                style="cursor: pointer"
                 @click:row="onClickRow"
             >
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -117,3 +115,9 @@
         </v-card>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+    :deep(.v-data-table tbody tr:hover) {
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+</style>
