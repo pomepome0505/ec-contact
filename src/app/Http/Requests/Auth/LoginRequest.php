@@ -33,6 +33,17 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'login_id.required' => 'ログインIDを入力してください。',
+            'password.required' => 'パスワードを入力してください。',
+        ];
+    }
+
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -45,7 +56,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'login_id' => trans('auth.failed'),
+                'login_id' => 'ログインIDまたはパスワードが正しくありません。',
             ]);
         }
 
@@ -88,10 +99,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'login_id' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'login_id' => "ログイン試行回数が上限に達しました。{$seconds}秒後に再試行してください。",
         ]);
     }
 
