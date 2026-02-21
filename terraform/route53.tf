@@ -6,3 +6,17 @@ resource "aws_route53_zone" "main" {
     Name = "${var.project_name}-${var.environment}-route53-zone"
   }
 }
+
+# lifestyle-mart-inquiry.com → ALB へのAレコード（エイリアス）
+# ドメインへのアクセスをALBに転送する
+resource "aws_route53_record" "alb_alias" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = var.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
+  }
+}
