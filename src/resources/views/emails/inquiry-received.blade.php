@@ -7,7 +7,7 @@
 
 ──────────────────────────────────
 
-カテゴリ: {{ $inquiry->category->label() }}
+カテゴリ: {{ $inquiry->category->name }}
 @if($inquiry->order_number)
 注文番号: {{ $inquiry->order_number }}
 @endif
