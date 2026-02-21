@@ -123,7 +123,7 @@ function resetForm() {
                     />
                     <h2 class="text-h6 font-weight-bold mb-2">お問い合わせを受け付けました</h2>
                     <p class="text-body-2 text-medium-emphasis mb-4">
-                        受付番号をお控えください。回答までしばらくお待ちください。
+                        受付番号をお控えください。ご入力いただいたメールアドレスへ回答いたしますので、しばらくお待ちください。
                     </p>
                     <v-chip color="primary" size="large" variant="tonal" class="mb-6">
                         <v-icon icon="mdi-tag-outline" start />
