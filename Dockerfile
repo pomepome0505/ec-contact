@@ -103,7 +103,9 @@ COPY src/ .
 RUN composer dump-autoload --optimize --no-dev
 
 # Build frontend assets
-RUN npm run build && rm -rf node_modules
+# npm run build 後に public/hot が残っている場合は削除する
+# （ローカル開発時に生成されたhotファイルがDockerコンテキストに含まれていた場合の安全対策）
+RUN npm run build && rm -rf node_modules && rm -f public/hot
 
 # ==============================================================================
 # Production Stage

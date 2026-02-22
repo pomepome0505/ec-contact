@@ -33,6 +33,9 @@ src/storage/framework/sessions/*
 src/storage/framework/views/*
 src/bootstrap/cache/*
 
+# Vite dev server marker (ローカル開発時に生成。本番イメージに含めない)
+src/public/hot
+
 # Documentation
 documents
 *.md
