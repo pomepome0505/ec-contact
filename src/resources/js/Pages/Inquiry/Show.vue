@@ -20,6 +20,9 @@
     const showReplyDialog = ref(false);
     const replyForm = ref({ subject: '', body: '' });
     const replySubmitting = ref(false);
+    const showCustomerMessageDialog = ref(false);
+    const customerMessageForm = ref({ subject: '', body: '' });
+    const customerMessageSubmitting = ref(false);
 
     const isLong = (text) => text && text.length > TEXT_LIMIT;
     const truncate = (text) => text.slice(0, TEXT_LIMIT) + '...';
@@ -109,6 +112,29 @@
                 },
                 onFinish: () => {
                     replySubmitting.value = false;
+                },
+            },
+        );
+    };
+
+    const openCustomerMessageDialog = () => {
+        customerMessageForm.value = { subject: '', body: '' };
+        showCustomerMessageDialog.value = true;
+    };
+
+    const submitCustomerMessage = () => {
+        customerMessageSubmitting.value = true;
+        router.post(
+            route('inquiries.customer-message', props.inquiry.id),
+            customerMessageForm.value,
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    showCustomerMessageDialog.value = false;
+                    showNotification('顧客メッセージを登録しました。');
+                },
+                onFinish: () => {
+                    customerMessageSubmitting.value = false;
                 },
             },
         );
@@ -387,15 +413,26 @@
                     <v-icon icon="mdi-message-text-outline" class="mr-2" />
                     メッセージ履歴
                 </div>
-                <v-btn
-                    variant="flat"
-                    color="primary"
-                    size="small"
-                    prepend-icon="mdi-reply"
-                    @click="openReplyDialog"
-                >
-                    返信
-                </v-btn>
+                <div class="d-flex" style="gap: 8px">
+                    <v-btn
+                        variant="outlined"
+                        color="warning"
+                        size="small"
+                        prepend-icon="mdi-email-plus-outline"
+                        @click="openCustomerMessageDialog"
+                    >
+                        顧客メッセージ登録
+                    </v-btn>
+                    <v-btn
+                        variant="flat"
+                        color="primary"
+                        size="small"
+                        prepend-icon="mdi-reply"
+                        @click="openReplyDialog"
+                    >
+                        返信
+                    </v-btn>
+                </div>
             </v-card-title>
             <v-divider />
             <v-card-text class="pa-4">
@@ -555,6 +592,63 @@
                         @click="submitReply"
                     >
                         送信
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- 顧客メッセージ登録ダイアログ -->
+        <v-dialog v-model="showCustomerMessageDialog" max-width="600" persistent>
+            <v-card>
+                <v-card-title class="text-subtitle-1 font-weight-bold pa-4">
+                    <v-icon icon="mdi-email-plus-outline" class="mr-2" />
+                    顧客メッセージ登録
+                </v-card-title>
+                <v-divider />
+                <v-card-text class="pa-4">
+                    <v-text-field
+                        v-model="customerMessageForm.subject"
+                        label="件名"
+                        variant="outlined"
+                        density="compact"
+                        rounded="lg"
+                        color="primary"
+                        class="mb-3"
+                        hide-details
+                    />
+                    <v-textarea
+                        v-model="customerMessageForm.body"
+                        label="本文"
+                        variant="outlined"
+                        density="compact"
+                        rounded="lg"
+                        color="primary"
+                        rows="8"
+                        hide-details
+                    />
+                </v-card-text>
+                <v-divider />
+                <v-card-actions class="pa-4">
+                    <v-spacer />
+                    <v-btn
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        :disabled="customerMessageSubmitting"
+                        @click="showCustomerMessageDialog = false"
+                    >
+                        キャンセル
+                    </v-btn>
+                    <v-btn
+                        variant="flat"
+                        color="warning"
+                        size="small"
+                        prepend-icon="mdi-check"
+                        :loading="customerMessageSubmitting"
+                        :disabled="!customerMessageForm.subject || !customerMessageForm.body"
+                        @click="submitCustomerMessage"
+                    >
+                        登録
                     </v-btn>
                 </v-card-actions>
             </v-card>

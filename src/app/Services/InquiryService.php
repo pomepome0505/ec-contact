@@ -143,6 +143,24 @@ class InquiryService
     }
 
     /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function storeCustomerMessage(int $inquiryId, array $validated): InquiryMessage
+    {
+        $inquiry = Inquiry::findOrFail($inquiryId);
+
+        /** @var InquiryMessage $message */
+        $message = $inquiry->messages()->create([
+            'staff_id' => null,
+            'message_type' => 'customer_reply',
+            'subject' => $validated['subject'],
+            'body' => $validated['body'],
+        ]);
+
+        return $message;
+    }
+
+    /**
      * @return array<int, array{id: int, name: string}>
      */
     public function getStaffList(): array

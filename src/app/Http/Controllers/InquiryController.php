@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReplyInquiryRequest;
+use App\Http\Requests\StoreCustomerMessageRequest;
 use App\Http\Requests\UpdateInquiryStatusRequest;
 use App\Models\Inquiry;
 use App\Services\InquiryService;
@@ -50,6 +51,13 @@ class InquiryController extends Controller
     public function reply(ReplyInquiryRequest $request, int $inquiry_id): RedirectResponse
     {
         $this->inquiryService->reply($inquiry_id, $request->validated(), (int) $request->user()->id);
+
+        return redirect()->route('inquiries.show', $inquiry_id);
+    }
+
+    public function storeCustomerMessage(StoreCustomerMessageRequest $request, int $inquiry_id): RedirectResponse
+    {
+        $this->inquiryService->storeCustomerMessage($inquiry_id, $request->validated());
 
         return redirect()->route('inquiries.show', $inquiry_id);
     }

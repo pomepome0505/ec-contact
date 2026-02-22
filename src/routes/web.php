@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/inquiries/{inquiry_id}', [InquiryController::class, 'show'])->name('inquiries.show');
         Route::patch('/inquiries/{inquiry_id}', [InquiryController::class, 'update'])->name('inquiries.update');
         Route::post('/inquiries/{inquiry_id}/reply', [InquiryController::class, 'reply'])->name('inquiries.reply');
+        Route::post('/inquiries/{inquiry_id}/customer-message', [InquiryController::class, 'storeCustomerMessage'])->name('inquiries.customer-message');
 
         Route::middleware('admin')->group(function () {
             Route::get('/categories', [InquiryCategoryController::class, 'index'])->name('categories.index');
