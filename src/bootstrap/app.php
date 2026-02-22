@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // ALBでSSLを終端しているため、X-Forwarded-Protoヘッダーを信頼する
+        // これによりLaravelがHTTPSでアセットURLを生成できるようになる
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
