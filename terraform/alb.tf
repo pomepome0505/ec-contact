@@ -37,9 +37,10 @@ resource "aws_lb_target_group" "main" {
   target_type = "ip" # Fargate用
 
   # ヘルスチェック設定
+  # /health は認証不要で 200 OK を返す専用エンドポイント
   health_check {
     enabled             = true
-    path                = "/"
+    path                = "/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2

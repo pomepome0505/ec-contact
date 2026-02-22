@@ -7,6 +7,11 @@ use App\Http\Controllers\PasswordController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+// ヘルスチェックエンドポイント（ALB用、認証不要）
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
+
 Route::get('/inquiry', function () {
     return view('inquiry');
 });
