@@ -107,10 +107,10 @@ resource "aws_vpc_security_group_egress_rule" "fargate_mariadb" {
   }
 }
 
-# Fargate Egressルール: HTTPS to VPC Endpoint
-resource "aws_vpc_security_group_egress_rule" "fargate_https" {
+# Fargate Egressルール: HTTPS to VPC Endpoint (Interface型: ECR API/DKR/Logs)
+resource "aws_vpc_security_group_egress_rule" "fargate_https_vpce" {
   security_group_id = aws_security_group.fargate.id
-  description       = "HTTPS to VPC Endpoint"
+  description       = "HTTPS to VPC Endpoint (Interface type)"
 
   referenced_security_group_id = aws_security_group.vpce.id
   from_port                    = 443
@@ -118,7 +118,24 @@ resource "aws_vpc_security_group_egress_rule" "fargate_https" {
   ip_protocol                  = "tcp"
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-fargate-https-egress"
+    Name = "${var.project_name}-${var.environment}-fargate-https-vpce-egress"
+  }
+}
+
+# Fargate Egressルール: HTTPS to S3 Gateway Endpoint
+# S3 Gateway型エンドポイントはSGを持たずルートテーブル経由のため、
+# CIDRベースで許可する必要がある。ECRイメージレイヤーはS3から取得される。
+resource "aws_vpc_security_group_egress_rule" "fargate_https_s3" {
+  security_group_id = aws_security_group.fargate.id
+  description       = "HTTPS to S3 Gateway Endpoint (for ECR image layers)"
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-fargate-https-s3-egress"
   }
 }
 
@@ -181,5 +198,20 @@ resource "aws_vpc_security_group_ingress_rule" "vpce_https" {
 
   tags = {
     Name = "${var.project_name}-${var.environment}-vpce-https-ingress"
+  }
+}
+
+# VPCエンドポイント Egressルール: VPC内への応答通信を許可
+# Interface型エンドポイントはENIとして機能するため、
+# VPC内（Fargateタスク等）へのレスポンス通信を明示的に許可する必要がある
+resource "aws_vpc_security_group_egress_rule" "vpce_all" {
+  security_group_id = aws_security_group.vpce.id
+  description       = "Allow all outbound traffic from VPC Endpoint"
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-vpce-all-egress"
   }
 }

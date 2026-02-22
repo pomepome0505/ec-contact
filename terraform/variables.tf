@@ -46,3 +46,17 @@ variable "availability_zones" {
   type        = list(string)
   default     = ["ap-northeast-1a", "ap-northeast-1c"]
 }
+
+# ECSタスクで使用するDockerイメージ
+variable "container_image" {
+  description = "ECSタスクで使用するDockerイメージURL（ECRリポジトリURL:タグ形式で指定）"
+  type        = string
+  default     = "" # terraform.tfvarsまたはCI/CDパイプラインからECR URLを指定する
+}
+
+# Laravel APP_KEY
+variable "app_key" {
+  description = "LaravelのAPP_KEY（php artisan key:generate で生成した値）"
+  type        = string
+  sensitive   = true
+}
