@@ -23,7 +23,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'login_id' => $user->login_id,
-            'password' => 'password',
+            'password' => 'P@ssw0rd987',
         ]);
 
         $this->assertAuthenticated();
@@ -48,7 +48,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'login_id' => $user->login_id,
-            'password' => 'password',
+            'password' => 'P@ssw0rd987',
         ]);
 
         $this->assertGuest();
@@ -63,7 +63,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'login_id' => $user->login_id,
-            'password' => 'password',
+            'password' => 'P@ssw0rd987',
         ]);
 
         $this->assertGuest();
@@ -78,7 +78,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'login_id' => $user->login_id,
-            'password' => 'password',
+            'password' => 'P@ssw0rd987',
         ]);
 
         $this->assertAuthenticated();
@@ -91,7 +91,7 @@ class AuthenticationTest extends TestCase
 
         $this->post('/login', [
             'login_id' => $user->login_id,
-            'password' => 'password',
+            'password' => 'P@ssw0rd987',
         ]);
 
         $this->assertAuthenticated();
