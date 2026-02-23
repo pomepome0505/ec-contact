@@ -427,15 +427,29 @@
                     メッセージ履歴
                 </div>
                 <div class="d-flex" style="gap: 8px">
-                    <v-btn
-                        variant="outlined"
-                        color="warning"
-                        size="small"
-                        prepend-icon="mdi-email-plus-outline"
-                        @click="openCustomerMessageDialog"
+                    <v-tooltip
+                        :disabled="!!inquiry.customer_email"
+                        text="メールアドレスが未登録のため顧客メッセージを登録できません"
+                        location="bottom"
                     >
-                        顧客メッセージ登録
-                    </v-btn>
+                        <template #activator="{ props: tooltipProps }">
+                            <span
+                                v-bind="tooltipProps"
+                                class="d-inline-flex"
+                            >
+                                <v-btn
+                                    variant="outlined"
+                                    color="warning"
+                                    size="small"
+                                    prepend-icon="mdi-email-plus-outline"
+                                    :disabled="!inquiry.customer_email"
+                                    @click="openCustomerMessageDialog"
+                                >
+                                    顧客メッセージ登録
+                                </v-btn>
+                            </span>
+                        </template>
+                    </v-tooltip>
                     <v-tooltip
                         :disabled="!!inquiry.customer_email"
                         text="メールアドレスが未登録のため返信できません"

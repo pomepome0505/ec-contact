@@ -75,4 +75,21 @@ class InquiryCustomerMessageTest extends TestCase
 
         $response->assertSessionHasErrors('body');
     }
+
+    public function test_メールアドレス未登録の問い合わせには顧客メッセージを登録できない(): void
+    {
+        $user = User::factory()->create();
+        $inquiry = Inquiry::factory()->create(['customer_email' => null]);
+
+        $response = $this->actingAs($user)->post("/inquiries/{$inquiry->id}/customer-message", [
+            'subject' => '顧客からの件名',
+            'body' => '顧客からの本文',
+        ]);
+
+        $response->assertSessionHasErrors('customer_email');
+        $this->assertDatabaseMissing('inquiry_messages', [
+            'inquiry_id' => $inquiry->id,
+            'message_type' => 'customer_reply',
+        ]);
+    }
 }

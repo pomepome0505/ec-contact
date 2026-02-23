@@ -170,6 +170,12 @@ class InquiryService
     {
         $inquiry = Inquiry::findOrFail($inquiryId);
 
+        if (! $inquiry->customer_email) {
+            throw ValidationException::withMessages([
+                'customer_email' => 'メールアドレスが未登録のため顧客メッセージを登録できません。',
+            ]);
+        }
+
         /** @var InquiryMessage $message */
         $message = $inquiry->messages()->create([
             'staff_id' => null,
