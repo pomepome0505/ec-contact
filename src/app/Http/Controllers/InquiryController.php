@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReplyInquiryRequest;
 use App\Http\Requests\StoreCustomerMessageRequest;
+use App\Http\Requests\StoreInquiryByStaffRequest;
 use App\Http\Requests\UpdateInquiryStatusRequest;
 use App\Models\Inquiry;
 use App\Services\InquiryService;
@@ -26,6 +27,23 @@ class InquiryController extends Controller
             'inquiries' => $this->inquiryService->getList(),
             ...$selectOptions,
         ]);
+    }
+
+    public function create(): Response
+    {
+        $selectOptions = $this->inquiryService->getSelectOptions();
+
+        return Inertia::render('Inquiry/Create', [
+            ...$selectOptions,
+            'staffs' => $this->inquiryService->getStaffList(),
+        ]);
+    }
+
+    public function store(StoreInquiryByStaffRequest $request): RedirectResponse
+    {
+        $inquiry = $this->inquiryService->storeByStaff($request->validated());
+
+        return redirect()->route('inquiries.show', $inquiry->id);
     }
 
     public function show(int $inquiry_id): Response

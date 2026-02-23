@@ -221,6 +221,19 @@
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                         <div class="text-caption text-medium-emphasis mb-1">
+                            受付区分
+                        </div>
+                        <v-chip
+                            :color="inquiry.channel_color"
+                            variant="tonal"
+                            size="small"
+                            label
+                        >
+                            {{ inquiry.channel_label }}
+                        </v-chip>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                        <div class="text-caption text-medium-emphasis mb-1">
                             カテゴリ
                         </div>
                         <span class="text-body-2">
@@ -423,15 +436,29 @@
                     >
                         顧客メッセージ登録
                     </v-btn>
-                    <v-btn
-                        variant="flat"
-                        color="primary"
-                        size="small"
-                        prepend-icon="mdi-reply"
-                        @click="openReplyDialog"
+                    <v-tooltip
+                        :disabled="!!inquiry.customer_email"
+                        text="メールアドレスが未登録のため返信できません"
+                        location="bottom"
                     >
-                        返信
-                    </v-btn>
+                        <template #activator="{ props: tooltipProps }">
+                            <span
+                                v-bind="tooltipProps"
+                                class="d-inline-flex"
+                            >
+                                <v-btn
+                                    variant="flat"
+                                    color="primary"
+                                    size="small"
+                                    prepend-icon="mdi-reply"
+                                    :disabled="!inquiry.customer_email"
+                                    @click="openReplyDialog"
+                                >
+                                    返信
+                                </v-btn>
+                            </span>
+                        </template>
+                    </v-tooltip>
                 </div>
             </v-card-title>
             <v-divider />

@@ -12,6 +12,7 @@
 
     const headers = [
         { title: '受付番号', key: 'inquiry_number', sortable: false },
+        { title: '受付区分', key: 'channel_label', sortable: false },
         { title: 'ステータス', key: 'status_label', sortable: false },
         { title: 'カテゴリ', key: 'category_label', sortable: false },
         { title: '優先度', key: 'priority_label', sortable: false },
@@ -54,9 +55,20 @@
                     問い合わせ一覧
                 </span>
             </div>
-            <v-chip variant="tonal" color="secondary" size="small">
-                全 {{ inquiries.total }} 件
-            </v-chip>
+            <div class="d-flex align-center" style="gap: 8px">
+                <v-chip variant="tonal" color="secondary" size="small">
+                    全 {{ inquiries.total }} 件
+                </v-chip>
+                <v-btn
+                    variant="flat"
+                    color="primary"
+                    size="small"
+                    prepend-icon="mdi-plus"
+                    :href="route('inquiries.create')"
+                >
+                    新規作成
+                </v-btn>
+            </div>
         </div>
 
         <v-card style="border: 1px solid #e2e8f0">
@@ -67,6 +79,18 @@
                 hide-default-footer
                 @click:row="onClickRow"
             >
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template #item.channel_label="{ item }">
+                    <v-chip
+                        :color="item.channel_color"
+                        variant="tonal"
+                        size="small"
+                        label
+                    >
+                        {{ item.channel_label }}
+                    </v-chip>
+                </template>
+
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template #item.status_label="{ item }">
                     <v-chip

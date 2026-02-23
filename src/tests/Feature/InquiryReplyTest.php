@@ -95,4 +95,23 @@ class InquiryReplyTest extends TestCase
 
         $response->assertSessionHasErrors('body');
     }
+
+    public function test_メールアドレス未登録の問い合わせには返信できない(): void
+    {
+        $user = User::factory()->create();
+        $inquiry = Inquiry::factory()->create([
+            'customer_email' => null,
+        ]);
+
+        $response = $this->actingAs($user)->post("/inquiries/{$inquiry->id}/reply", [
+            'subject' => '回答件名',
+            'body' => '回答本文',
+        ]);
+
+        $response->assertStatus(500);
+        $this->assertDatabaseMissing('inquiry_messages', [
+            'inquiry_id' => $inquiry->id,
+            'message_type' => 'staff_reply',
+        ]);
+    }
 }

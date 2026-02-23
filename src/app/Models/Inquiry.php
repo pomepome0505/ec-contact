@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InquiryChannel;
 use App\Enums\InquiryPriority;
 use App\Enums\InquiryStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,7 @@ class Inquiry extends Model
         'staff_id',
         'order_number',
         'category_id',
+        'channel',
         'customer_name',
         'customer_email',
         'status',
@@ -31,6 +33,7 @@ class Inquiry extends Model
     protected function casts(): array
     {
         return [
+            'channel' => InquiryChannel::class,
             'status' => InquiryStatus::class,
             'priority' => InquiryPriority::class,
         ];

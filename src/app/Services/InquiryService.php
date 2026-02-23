@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\InquiryChannel;
 use App\Enums\InquiryPriority;
 use App\Enums\InquiryStatus;
 use App\Mail\InquiryReceived;
@@ -28,6 +29,8 @@ class InquiryService
 
         $paginator->getCollection()->transform(function (mixed $inquiry) {
             /** @var Inquiry $inquiry */
+            /** @var InquiryChannel $channel */
+            $channel = $inquiry->channel;
             /** @var InquiryStatus $status */
             $status = $inquiry->status;
             /** @var InquiryPriority $priority */
@@ -40,6 +43,8 @@ class InquiryService
                 'inquiry_number' => $inquiry->inquiry_number,
                 'category' => $inquiry->category_id,
                 'category_label' => $inquiry->category?->name,
+                'channel_label' => $channel->label(),
+                'channel_color' => $channel->color(),
                 'status' => $status->value,
                 'status_label' => $status->label(),
                 'status_color' => $status->color(),
@@ -62,6 +67,8 @@ class InquiryService
     {
         $inquiry->load(['staff', 'category', 'messages' => fn ($q) => $q->latest()->with('staff')]);
 
+        /** @var InquiryChannel $channel */
+        $channel = $inquiry->channel;
         /** @var InquiryStatus $status */
         $status = $inquiry->status;
         /** @var InquiryPriority $priority */
@@ -73,6 +80,9 @@ class InquiryService
             'id' => $inquiry->id,
             'inquiry_number' => $inquiry->inquiry_number,
             'category_label' => $inquiry->category?->name,
+            'channel' => $channel->value,
+            'channel_label' => $channel->label(),
+            'channel_color' => $channel->color(),
             'status' => $status->value,
             'status_label' => $status->label(),
             'status_color' => $status->color(),
@@ -101,6 +111,10 @@ class InquiryService
                 ->get(['id', 'name'])
                 ->map(fn (InquiryCategory $c) => ['value' => $c->id, 'label' => $c->name])
                 ->all(),
+            'channels' => collect(InquiryChannel::cases())->map(fn (InquiryChannel $ch) => [
+                'value' => $ch->value,
+                'label' => $ch->label(),
+            ])->all(),
             'statuses' => collect(InquiryStatus::cases())->map(fn (InquiryStatus $s) => [
                 'value' => $s->value,
                 'label' => $s->label(),
@@ -128,6 +142,10 @@ class InquiryService
     public function reply(int $inquiryId, array $validated, int $staffId): InquiryMessage
     {
         $inquiry = Inquiry::findOrFail($inquiryId);
+
+        if (! $inquiry->customer_email) {
+            throw new \LogicException('メールアドレスが未登録のため返信できません。');
+        }
 
         /** @var InquiryMessage $message */
         $message = $inquiry->messages()->create([
@@ -201,6 +219,14 @@ class InquiryService
     /**
      * @param  array<string, mixed>  $validated
      */
+    public function storeByStaff(array $validated): Inquiry
+    {
+        return $this->createInquiryWithRetry($validated, useValidatedOptions: true);
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
     public function store(array $validated): Inquiry
     {
         $inquiry = $this->createInquiryWithRetry($validated);
@@ -214,28 +240,38 @@ class InquiryService
     /**
      * @param  array<string, mixed>  $validated
      */
-    private function createInquiryWithRetry(array $validated): Inquiry
+    private function createInquiryWithRetry(array $validated, bool $useValidatedOptions = false): Inquiry
     {
         for ($attempt = 1; $attempt <= self::MAX_RETRIES; $attempt++) {
             try {
-                return DB::transaction(function () use ($validated) {
+                return DB::transaction(function () use ($validated, $useValidatedOptions) {
                     $inquiryNumber = $this->generateInquiryNumber();
 
-                    $inquiry = Inquiry::create([
+                    $inquiryData = [
                         'inquiry_number' => $inquiryNumber,
                         'category_id' => $validated['category_id'],
+                        'channel' => $validated['channel'] ?? 'form',
                         'order_number' => $validated['order_number'] ?? null,
                         'customer_name' => $validated['customer_name'],
-                        'customer_email' => $validated['customer_email'],
-                        'status' => 'pending',
-                        'priority' => 'medium',
-                    ]);
+                        'customer_email' => $validated['customer_email'] ?? null,
+                        'status' => $useValidatedOptions ? $validated['status'] : 'pending',
+                        'priority' => $useValidatedOptions ? $validated['priority'] : 'medium',
+                    ];
 
-                    $inquiry->messages()->create([
-                        'message_type' => 'initial_inquiry',
-                        'subject' => $validated['subject'],
-                        'body' => $validated['body'],
-                    ]);
+                    if ($useValidatedOptions) {
+                        $inquiryData['staff_id'] = $validated['staff_id'] ?? null;
+                        $inquiryData['internal_notes'] = $validated['internal_notes'] ?? null;
+                    }
+
+                    $inquiry = Inquiry::create($inquiryData);
+
+                    if (! empty($validated['subject']) && ! empty($validated['body'])) {
+                        $inquiry->messages()->create([
+                            'message_type' => 'initial_inquiry',
+                            'subject' => $validated['subject'],
+                            'body' => $validated['body'],
+                        ]);
+                    }
 
                     return $inquiry;
                 });

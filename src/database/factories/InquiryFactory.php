@@ -44,6 +44,7 @@ class InquiryFactory extends Factory
             'staff_id' => fake()->optional(0.7)->randomElement(User::pluck('id')->toArray() ?: [null]),
             'order_number' => fake()->optional(0.6)->numerify('ORD-########'),
             'category_id' => fake()->randomElement(InquiryCategory::pluck('id')->toArray() ?: range(1, 6)),
+            'channel' => fake()->randomElement(['form', 'phone']),
             'customer_name' => fake()->randomElement(self::CUSTOMER_NAMES),
             'customer_email' => fake()->safeEmail(),
             'status' => fake()->randomElement(['pending', 'in_progress', 'resolved', 'closed']),
