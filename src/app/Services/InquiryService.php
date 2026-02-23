@@ -16,6 +16,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 class InquiryService
 {
@@ -144,7 +145,9 @@ class InquiryService
         $inquiry = Inquiry::findOrFail($inquiryId);
 
         if (! $inquiry->customer_email) {
-            throw new \LogicException('メールアドレスが未登録のため返信できません。');
+            throw ValidationException::withMessages([
+                'customer_email' => 'メールアドレスが未登録のため返信できません。',
+            ]);
         }
 
         /** @var InquiryMessage $message */

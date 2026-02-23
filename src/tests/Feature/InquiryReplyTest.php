@@ -108,7 +108,7 @@ class InquiryReplyTest extends TestCase
             'body' => '回答本文',
         ]);
 
-        $response->assertStatus(500);
+        $response->assertSessionHasErrors('customer_email');
         $this->assertDatabaseMissing('inquiry_messages', [
             'inquiry_id' => $inquiry->id,
             'message_type' => 'staff_reply',
