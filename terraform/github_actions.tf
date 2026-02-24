@@ -119,15 +119,16 @@ resource "aws_iam_role_policy" "github_actions" {
         Resource = aws_ecr_repository.app.arn
       },
       # ------------------------------------------------------------------
-      # ECS タスク定義の登録
-      # 新しいイメージタグを含むタスク定義リビジョンをCI/CDで登録する。
-      # RegisterTaskDefinitionはリソースレベルの制限が不可のため "*" を使用する
+      # ECS タスク定義の登録・取得
+      # 現在のタスク定義を取得し、新しいイメージタグで新リビジョンを登録する。
+      # これらのAPIはリソースレベルの制限が不可のため "*" を使用する
       # ------------------------------------------------------------------
       {
         Sid    = "AllowECSRegisterTaskDefinition"
         Effect = "Allow"
         Action = [
           "ecs:RegisterTaskDefinition",
+          "ecs:DescribeTaskDefinition",
         ]
         Resource = "*"
       },
