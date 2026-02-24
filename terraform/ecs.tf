@@ -144,7 +144,7 @@ resource "aws_ecs_service" "main" {
   name            = "${var.project_name}-${var.environment}-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.main.arn
-  desired_count   = 0 # コスト削減のため停止中（再開時は1に戻す）
+  desired_count   = 1
   launch_type     = "FARGATE"
 
   # プラットフォームバージョンは LATEST を使用する
