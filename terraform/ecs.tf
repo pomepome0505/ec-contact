@@ -94,6 +94,10 @@ resource "aws_ecs_task_definition" "main" {
           value = "stderr"
         },
         {
+          name  = "DB_CONNECTION"
+          value = "mariadb"
+        },
+        {
           name = "DB_HOST"
           # RDSエンドポイントはホスト名のみ抽出（"hostname:port" → "hostname"）
           value = split(":", aws_db_instance.main.endpoint)[0]

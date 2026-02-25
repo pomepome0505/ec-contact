@@ -21,10 +21,10 @@ Dockerfile
 .DS_Store
 Thumbs.db
 
-# Environment
-.env
-.env.local
-.env.*.local
+# Environment（本番の設定はECSタスク定義の環境変数で管理する）
+src/.env
+src/.env.local
+src/.env.*.local
 
 # Logs & cache (regenerated in container)
 src/storage/logs/*
