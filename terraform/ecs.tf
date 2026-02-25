@@ -169,6 +169,17 @@ resource "aws_ecs_service" "main" {
   # タスク起動後、ALBヘルスチェックが安定するまでの猶予期間（秒）
   health_check_grace_period_seconds = 60
 
+  # デプロイ並行数制御: 最大タスク数 200%（新旧タスクを同時に起動できる）
+  deployment_maximum_percent = 200
+  # デプロイ並行数制御: 最低稼働タスク数 50%（ダウンタイムを最小化しつつコスト抑制）
+  deployment_minimum_healthy_percent = 50
+
+  # デプロイサーキットブレーカー: 失敗時に自動的に前のタスク定義へロールバックする
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   # タスク定義の変更（イメージ更新等）をTerraform管理外で行う場合に備えて
   # desired_count と task_definition の変更を無視する設定を追加することも検討できる
   # lifecycle {
