@@ -150,8 +150,7 @@ resource "aws_iam_role_policy" "github_actions" {
         Action = [
           "ecs:DescribeServices",
         ]
-        # DescribeServicesはクラスターレベルのARNで制限する
-        Resource = aws_ecs_cluster.main.arn
+        Resource = aws_ecs_service.main.id
       },
       # ------------------------------------------------------------------
       # IAM PassRole
