@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: ec-contact-app
+    ports:
+      - "80:80"
+      - "5173:5173"
+    volumes:
+      - ./src:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - ec-contact
+
+  db:
+    image: mariadb:11.8
+    container_name: ec-contact-db
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MARIADB_DATABASE: ${DB_DATABASE:-ec_contact}
+      MARIADB_USER: ${DB_USERNAME:-ec_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-ec_password}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - ec-contact
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ec-contact-phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${DB_USERNAME:-ec_user}
+      PMA_PASSWORD: ${DB_PASSWORD:-ec_password}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - ec-contact
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ec-contact-mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - ec-contact
+
+volumes:
+  db-data:
+
+networks:
+  ec-contact:
