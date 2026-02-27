@@ -590,6 +590,14 @@
                 </v-card-title>
                 <v-divider />
                 <v-card-text class="pa-4">
+                    <v-alert
+                        type="warning"
+                        variant="tonal"
+                        icon="mdi-alert-circle-outline"
+                        class="mb-4"
+                    >
+                        現在、本番環境でAmazon SESが利用できないため、メールは送信されません。
+                    </v-alert>
                     <v-text-field
                         v-model="replyForm.subject"
                         label="件名"

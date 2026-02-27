@@ -137,7 +137,15 @@ function resetForm() {
                 </v-card>
 
                 <!-- フォーム -->
-                <v-card v-else class="pa-6">
+                <v-card v-if="!submitted" class="pa-6">
+                    <v-alert
+                        type="warning"
+                        variant="tonal"
+                        class="mb-4"
+                        icon="mdi-alert-circle-outline"
+                    >
+                        現在、本番環境でAmazon SESが利用できないため、問い合わせ完了メールの自動送信機能は停止しています。
+                    </v-alert>
                     <v-form ref="formRef" v-model="formValid" @submit.prevent="submitForm">
                         <v-row dense>
                             <v-col cols="12" sm="6">
