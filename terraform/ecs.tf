@@ -125,6 +125,38 @@ resource "aws_ecs_task_definition" "main" {
         {
           name  = "MAIL_FROM_NAME"
           value = "EC Contact"
+        },
+        {
+          name  = "DD_SERVICE"
+          value = "ec-contact"
+        },
+        {
+          name  = "DD_ENV"
+          value = "production"
+        },
+        {
+          name  = "DD_VERSION"
+          value = "1.0.0"
+        },
+        {
+          name  = "DD_TRACE_AGENT_URL"
+          value = "https://trace.agent.ap1.datadoghq.com"
+        },
+        {
+          name  = "DD_LOGS_INJECTION"
+          value = "true"
+        },
+        {
+          name  = "LOG_STDERR_FORMATTER"
+          value = "Monolog\\Formatter\\JsonFormatter"
+        }
+      ]
+
+      # Secrets Manager からシークレット値を注入する
+      secrets = [
+        {
+          name      = "DD_API_KEY"
+          valueFrom = aws_secretsmanager_secret.datadog_api_key.arn
         }
       ]
 

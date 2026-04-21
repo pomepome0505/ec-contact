@@ -128,3 +128,93 @@ resource "aws_iam_role_policy" "ecs_task_ses" {
     ]
   })
 }
+
+# ------------------------------------------------------------------------------
+# Datadog AWS Integration IAMロール
+# DatadogのAWSアカウント(464622532012)がCloudWatch等のメトリクスを読み取るために使用する
+# external_idはdatadog_integration_aws_accountリソースが自動生成する
+# ------------------------------------------------------------------------------
+resource "aws_iam_role" "datadog_integration" {
+  name = "${var.project_name}-${var.environment}-datadog-integration"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::464622532012:root"
+        }
+        Action = "sts:AssumeRole"
+        Condition = {
+          StringEquals = {
+            "sts:ExternalId" = local.datadog_external_id
+          }
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-datadog-integration"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
+resource "aws_iam_role_policy" "datadog_integration" {
+  name = "${var.project_name}-${var.environment}-datadog-integration-policy"
+  role = aws_iam_role.datadog_integration.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:Get*",
+          "cloudwatch:List*",
+          "cloudwatch:Describe*",
+          "ec2:Describe*",
+          "ecs:Describe*",
+          "ecs:List*",
+          "elasticloadbalancing:Describe*",
+          "logs:Get*",
+          "logs:List*",
+          "logs:Describe*",
+          "logs:FilterLogEvents",
+          "rds:Describe*",
+          "rds:List*",
+          "tag:GetResources",
+          "tag:GetTagKeys",
+          "tag:GetTagValues",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# ------------------------------------------------------------------------------
+# ECSタスク実行ロールにSecrets Manager読み取り権限を追加
+# DD_API_KEYをSecrets Managerから取得するために必要
+# ------------------------------------------------------------------------------
+resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
+  name = "lmi-production-secrets-read-policy"
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowSecretsManagerRead"
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue",
+        ]
+        Resource = aws_secretsmanager_secret.datadog_api_key.arn
+      }
+    ]
+  })
+}

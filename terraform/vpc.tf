@@ -203,3 +203,38 @@ resource "aws_route_table_association" "private_rds_1c" {
   subnet_id      = aws_subnet.private_rds_1c.id
   route_table_id = aws_route_table.private_rds.id
 }
+
+# ================================================================
+# NAT Gateway（FargateタスクのDatadog APMトレース送信用）
+# ================================================================
+resource "aws_eip" "nat" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-nat-eip"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
+resource "aws_nat_gateway" "main" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public_1a.id
+
+  depends_on = [aws_internet_gateway.main]
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-nat-gw"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
+# Private Fargate サブネットからのインターネット向けトラフィックをNAT Gateway経由にする
+resource "aws_route" "private_fargate_internet" {
+  route_table_id         = aws_route_table.private_fargate.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.main.id
+}

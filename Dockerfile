@@ -24,6 +24,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install dd-trace-php (Datadog APM - agentless mode)
+RUN curl -LO https://github.com/DataDog/dd-trace-php/releases/latest/download/datadog-setup.php \
+    && php datadog-setup.php --php-bin=all \
+    && rm datadog-setup.php \
+    && php -m | grep -q ddtrace
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

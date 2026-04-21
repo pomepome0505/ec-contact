@@ -60,3 +60,17 @@ variable "app_key" {
   type        = string
   sensitive   = true
 }
+
+# Datadog API Key
+variable "datadog_api_key" {
+  description = "Datadog API Key"
+  type        = string
+  sensitive   = true
+}
+
+# Datadog Application Key
+variable "datadog_app_key" {
+  description = "Datadog Application Key"
+  type        = string
+  sensitive   = true
+}
