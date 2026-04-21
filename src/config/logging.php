@@ -102,7 +102,10 @@ return [
                 'stream' => 'php://stderr',
             ],
             'formatter' => env('LOG_STDERR_FORMATTER'),
-            'processors' => [PsrLogMessageProcessor::class],
+            'processors' => [
+                \DDTrace\Logs\LogDatadogProcessor::class,
+                PsrLogMessageProcessor::class,
+            ],
         ],
 
         'syslog' => [
