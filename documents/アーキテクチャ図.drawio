@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.4.0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.4">
   <diagram name="ECサイト問い合わせ対応システム アーキテクチャ" id="eyMKgptHHyrmvJomotoo">
-    <mxGraphModel dx="2256" dy="3880" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2378" dy="3955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -50,12 +50,33 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="_MgNUyv7TANTyLwFuVdp-141" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;" target="_MgNUyv7TANTyLwFuVdp-121">
+        <mxCell id="_MgNUyv7TANTyLwFuVdp-141" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;" target="new-datadog-forwarder-icon">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-142" connectable="0" parent="_MgNUyv7TANTyLwFuVdp-141" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" value="ログ転送" vertex="1">
           <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
             <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-forwarder-to-datadog-edge" edge="1" parent="1" source="new-datadog-forwarder-icon" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;" target="_MgNUyv7TANTyLwFuVdp-121">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="new-forwarder-to-datadog-label" connectable="0" parent="new-forwarder-to-datadog-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" value="ログ転送" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-datadog-metrics-edge" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-121" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#632CA6;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="_MgNUyv7TANTyLwFuVdp-120">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-110" y="-1090" />
+              <mxPoint x="23" y="-1090" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-datadog-metrics-edge-label" connectable="0" parent="new-datadog-metrics-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#632CA6;" value="メトリクス取得" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint x="10" y="2" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-143" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-122" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="_MgNUyv7TANTyLwFuVdp-168">
@@ -149,8 +170,11 @@
         <mxCell id="_MgNUyv7TANTyLwFuVdp-113" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;grStroke=0;strokeColor=#147EBA;fillColor=#E6F2F8;verticalAlign=top;align=left;spacingLeft=30;fontColor=#147EBA;dashed=0;" value="Private Subnet" vertex="1">
           <mxGeometry height="162.85" width="360" x="210" y="-961.4300000000001" as="geometry" />
         </mxCell>
-        <mxCell id="mAwy7k8KOcDguh8v7Pp3-41" parent="_MgNUyv7TANTyLwFuVdp-113" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.fargate;" value="ECS Fargate&lt;br&gt;Nginx +&amp;nbsp; Laravel + Vue&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="54.28" width="54.28" x="146.86" y="45.88" as="geometry" />
+        <mxCell id="mAwy7k8KOcDguh8v7Pp3-41" parent="_MgNUyv7TANTyLwFuVdp-113" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.fargate;" value="ECS Fargate&lt;br&gt;app (Nginx + Laravel + Vue)" vertex="1">
+          <mxGeometry height="54.28" width="54.28" x="100" y="45.88" as="geometry" />
+        </mxCell>
+        <mxCell id="new-datadog-agent-sidecar" parent="_MgNUyv7TANTyLwFuVdp-113" style="sketch=0;aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/mscae/CustomDomain.svg;fillColor=#632CA6;strokeColor=#ffffff;fontColor=#232F3E;verticalLabelPosition=bottom;verticalAlign=top;" value="Datadog Agent" vertex="1">
+          <mxGeometry height="44" width="44" x="210" y="50" as="geometry" />
         </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-112" parent="1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.application_load_balancer;" value="Application Load Balancer" vertex="1">
           <mxGeometry height="60" width="60" x="632.4" y="-1280" as="geometry" />
@@ -191,6 +215,29 @@
         <mxCell id="mAwy7k8KOcDguh8v7Pp3-18" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_security_group;grStroke=0;strokeColor=#7AA116;fillColor=#F2F6E8;verticalAlign=top;align=left;spacingLeft=30;fontColor=#248814;dashed=0;" value="Public subnet" vertex="1">
           <mxGeometry height="160" width="360" x="210" y="-1169" as="geometry" />
         </mxCell>
+        <mxCell id="new-nat-gateway-group" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="80" width="70" x="260" y="-1145" as="geometry" />
+        </mxCell>
+        <mxCell id="new-nat-gateway-icon" parent="new-nat-gateway-group" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.nat_gateway;" value="" vertex="1">
+          <mxGeometry height="50" width="50" x="10" as="geometry" />
+        </mxCell>
+        <mxCell id="new-nat-gateway-label" parent="new-nat-gateway-group" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=#4D4D4D;" value="NAT Gateway" vertex="1">
+          <mxGeometry height="20" width="70" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="new-nat-gateway-edge" edge="1" parent="1" source="mAwy7k8KOcDguh8v7Pp3-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4D4D4D;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="new-nat-gateway-icon">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="356" y="-990" />
+              <mxPoint x="295" y="-990" />
+              <mxPoint x="295" y="-1095" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-nat-gateway-edge-label" connectable="0" parent="new-nat-gateway-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" value="アウトバウンド通信" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-176" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4D4D4D;" target="mAwy7k8KOcDguh8v7Pp3-5">
           <mxGeometry relative="1" as="geometry">
             <Array as="points" />
@@ -211,6 +258,15 @@
         </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-120" parent="1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" value="&lt;font style=&quot;color: rgb(77, 77, 77);&quot;&gt;CloudWatch Logs&lt;br&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="60" width="60" x="53" y="-1120.33" as="geometry" />
+        </mxCell>
+        <mxCell id="new-datadog-forwarder-group" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="80" width="80" x="-100" y="-1060.33" as="geometry" />
+        </mxCell>
+        <mxCell id="new-datadog-forwarder-icon" parent="new-datadog-forwarder-group" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" value="" vertex="1">
+          <mxGeometry height="50" width="50" x="15" as="geometry" />
+        </mxCell>
+        <mxCell id="new-datadog-forwarder-label" parent="new-datadog-forwarder-group" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=#4D4D4D;" value="Datadog Forwarder" vertex="1">
+          <mxGeometry height="20" width="80" y="58" as="geometry" />
         </mxCell>
         <mxCell id="mAwy7k8KOcDguh8v7Pp3-20" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-118" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4D4D4D;" target="_MgNUyv7TANTyLwFuVdp-124" value="">
           <mxGeometry relative="1" as="geometry">
@@ -351,6 +407,23 @@
         <mxCell id="_MgNUyv7TANTyLwFuVdp-124" parent="1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" value="&lt;font style=&quot;color: rgb(77, 77, 77);&quot;&gt;S3&lt;/font&gt;" vertex="1">
           <mxGeometry height="60" width="60" x="53" y="-999.9999999999999" as="geometry" />
         </mxCell>
+        <mxCell id="new-secrets-manager-icon" parent="1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.secrets_manager;" value="&lt;font style=&quot;color: rgb(77, 77, 77);&quot;&gt;Secrets Manager&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="53" y="-660" as="geometry" />
+        </mxCell>
+        <mxCell id="new-secrets-manager-edge" edge="1" parent="1" source="new-secrets-manager-icon" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DD344C;entryX=0;entryY=0.75;entryDx=0;entryDy=0;entryPerimeter=0;" target="mAwy7k8KOcDguh8v7Pp3-41">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="83" y="-630" />
+              <mxPoint x="356" y="-630" />
+              <mxPoint x="356" y="-870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-secrets-manager-edge-label" connectable="0" parent="new-secrets-manager-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#DD344C;" value="シークレット取得" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-182" connectable="0" parent="1" style="group" value="" vertex="1">
           <mxGeometry height="73.18" width="90" x="170" y="-949.9999999999999" as="geometry" />
         </mxCell>
@@ -359,6 +432,30 @@
         </mxCell>
         <mxCell id="_MgNUyv7TANTyLwFuVdp-184" parent="_MgNUyv7TANTyLwFuVdp-182" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=#4D4D4D;" value="VPC&lt;div&gt;エンドポイント&lt;/div&gt;" vertex="1">
           <mxGeometry height="23.18" width="90" x="-5.59" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="new-route53-to-alb-edge" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-108" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4D4D4D;" target="_MgNUyv7TANTyLwFuVdp-112">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="new-route53-to-alb-label" connectable="0" parent="new-route53-to-alb-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" value="エイリアスレコード" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-nat-to-igw-edge" edge="1" parent="1" source="new-nat-gateway-icon" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4D4D4D;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="_MgNUyv7TANTyLwFuVdp-173">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="new-nat-to-igw-label" connectable="0" parent="new-nat-to-igw-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" value="インターネットへのルーティング" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="new-internet-to-datadog-edge" edge="1" parent="1" source="_MgNUyv7TANTyLwFuVdp-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#632CA6;" target="_MgNUyv7TANTyLwFuVdp-121">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="new-internet-to-datadog-label" connectable="0" parent="new-internet-to-datadog-edge" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#632CA6;" value="APMトレース送信" vertex="1">
+          <mxGeometry relative="1" x="-0.2" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

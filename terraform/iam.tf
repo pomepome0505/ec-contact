@@ -131,7 +131,9 @@ resource "aws_iam_role_policy" "ecs_task_ses" {
 
 # ------------------------------------------------------------------------------
 # Datadog AWS Integration IAMロール
-# DatadogのAWSアカウント(464622532012)がCloudWatch等のメトリクスを読み取るために使用する
+# AP1サイト(ap1.datadoghq.com)向けに2つのDatadog AWSアカウントを許可する
+#   - 464622532012: Datadog共有アカウント（US1/EU/AP1等で共用）
+#   - 417141415827: AP1固有アカウント
 # external_idはdatadog_integration_aws_accountリソースが自動生成する
 # ------------------------------------------------------------------------------
 resource "aws_iam_role" "datadog_integration" {
@@ -143,7 +145,10 @@ resource "aws_iam_role" "datadog_integration" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::464622532012:root"
+          AWS = [
+            "arn:aws:iam::464622532012:root",
+            "arn:aws:iam::417141415827:root",
+          ]
         }
         Action = "sts:AssumeRole"
         Condition = {

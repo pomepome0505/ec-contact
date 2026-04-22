@@ -31,8 +31,8 @@ resource "aws_ecs_task_definition" "main" {
   family                   = "${var.project_name}-${var.environment}-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 256 # 0.25 vCPU
-  memory                   = 512 # 0.5 GB
+  cpu                      = 512  # 0.5 vCPU（Datadogエージェント追加に伴い増量）
+  memory                   = 1024 # 1 GB（Datadogエージェント追加に伴い増量）
 
   # ECSコントロールプレーン用ロール（ECRイメージpull / CloudWatch Logsへの書き込み）
   execution_role_arn = aws_iam_role.ecs_task_execution.arn
@@ -139,10 +139,6 @@ resource "aws_ecs_task_definition" "main" {
           value = "1.0.0"
         },
         {
-          name  = "DD_TRACE_AGENT_URL"
-          value = "https://trace.agent.ap1.datadoghq.com"
-        },
-        {
           name  = "DD_LOGS_INJECTION"
           value = "true"
         },
@@ -161,6 +157,70 @@ resource "aws_ecs_task_definition" "main" {
       ]
 
       essential = true
+    },
+    # ------------------------------------------------------------------------------
+    # Datadog Agent サイドカーコンテナ
+    # PHPトレーサーからAPMトレースを受け取り、Datadogバックエンドへ転送する
+    # PHPトレーサーはデフォルトで localhost:8126 にトレースを送信する
+    # ------------------------------------------------------------------------------
+    {
+      name  = "datadog-agent"
+      image = "public.ecr.aws/datadog/agent:7"
+
+      portMappings = [
+        {
+          containerPort = 8126
+          hostPort      = 8126
+          protocol      = "tcp"
+        }
+      ]
+
+      # CloudWatch Logsへのログ転送設定
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "datadog-agent"
+        }
+      }
+
+      environment = [
+        {
+          name  = "DD_SITE"
+          value = "ap1.datadoghq.com"
+        },
+        # APMトレース収集を有効化
+        {
+          name  = "DD_APM_ENABLED"
+          value = "true"
+        },
+        # Fargate環境であることを明示（コンテナメタデータ収集に必要）
+        {
+          name  = "ECS_FARGATE"
+          value = "true"
+        },
+        # プロセス監視は不要のため無効化（リソース節約）
+        {
+          name  = "DD_PROCESS_AGENT_ENABLED"
+          value = "false"
+        },
+        # ログはCloudWatch経由で収集するためAgent側のログ収集は無効化
+        {
+          name  = "DD_LOGS_ENABLED"
+          value = "false"
+        }
+      ]
+
+      secrets = [
+        {
+          name      = "DD_API_KEY"
+          valueFrom = aws_secretsmanager_secret.datadog_api_key.arn
+        }
+      ]
+
+      # Agentが停止してもアプリコンテナは継続稼働させる
+      essential = false
     }
   ])
 
@@ -215,12 +275,6 @@ resource "aws_ecs_service" "main" {
     enable   = true
     rollback = true
   }
-
-  # タスク定義の変更（イメージ更新等）をTerraform管理外で行う場合に備えて
-  # desired_count と task_definition の変更を無視する設定を追加することも検討できる
-  # lifecycle {
-  #   ignore_changes = [task_definition, desired_count]
-  # }
 
   # ALBリスナーが作成された後にServiceを作成する
   depends_on = [
