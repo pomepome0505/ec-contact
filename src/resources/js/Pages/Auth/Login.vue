@@ -1,6 +1,7 @@
 <script setup>
     import GuestLayout from '@/Layouts/GuestLayout.vue';
     import { Head, useForm } from '@inertiajs/vue3';
+    import { ref } from 'vue';
 
     defineProps({
         status: {
@@ -8,6 +9,8 @@
             default: null,
         },
     });
+
+    const showPassword = ref(false);
 
     const form = useForm({
         login_id: '',
@@ -52,11 +55,13 @@
                 <v-text-field
                     v-model="form.password"
                     label="パスワード"
-                    type="password"
+                    :type="showPassword ? 'text' : 'password'"
                     required
                     autocomplete="current-password"
                     :error-messages="form.errors.password"
                     prepend-inner-icon="mdi-lock"
+                    :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                    @click:append-inner="showPassword = !showPassword"
                     class="mb-2"
                 />
 
