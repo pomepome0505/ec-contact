@@ -63,15 +63,13 @@ class InquiryTest extends TestCase
         ]);
     }
 
-    public function test_送信すると受付完了メールが送信される(): void
+    public function test_送信しても受付完了メールは送信されない(): void
     {
         Mail::fake();
 
         $this->postJson('/api/inquiries', $this->validData());
 
-        Mail::assertSent(InquiryReceived::class, function (InquiryReceived $mail) {
-            return $mail->hasTo('test@example.com');
-        });
+        Mail::assertNothingSent();
     }
 
     public function test_受付番号が所定の形式で生成される(): void
