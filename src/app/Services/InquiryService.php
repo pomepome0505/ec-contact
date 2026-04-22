@@ -241,7 +241,7 @@ class InquiryService
         $inquiry = $this->createInquiryWithRetry($validated);
 
         $inquiry->load('category');
-        Mail::to($inquiry->customer_email)->send(new InquiryReceived($inquiry));
+        // Mail::to($inquiry->customer_email)->send(new InquiryReceived($inquiry));
 
         return $inquiry;
     }

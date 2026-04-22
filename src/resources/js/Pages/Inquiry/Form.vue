@@ -144,7 +144,7 @@ function resetForm() {
                         class="mb-4"
                         icon="mdi-alert-circle-outline"
                     >
-                        現在、本番環境でAmazon SESが利用できないため、問い合わせ完了メールの自動送信機能は停止しています。
+                        現在、お問い合わせ受付の確認メールは送信されません。受付番号を画面でご確認ください。
                     </v-alert>
                     <v-form ref="formRef" v-model="formValid" @submit.prevent="submitForm">
                         <v-row dense>
