@@ -52,7 +52,7 @@ class InquiryReplyTest extends TestCase
         ]);
     }
 
-    public function test_返信を送信するとメールが送信される(): void
+    public function test_返信を送信してもメールは送信されない(): void
     {
         Mail::fake();
         $user = User::factory()->create();
@@ -65,9 +65,7 @@ class InquiryReplyTest extends TestCase
             'body' => '回答本文',
         ]);
 
-        Mail::assertSent(\App\Mail\InquiryReply::class, function ($mail) {
-            return $mail->hasTo('customer@example.com');
-        });
+        Mail::assertNotSent(\App\Mail\InquiryReply::class);
     }
 
     public function test_件名未入力で422エラーになる(): void
