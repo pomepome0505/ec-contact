@@ -205,7 +205,8 @@ resource "aws_route_table_association" "private_rds_1c" {
 }
 
 # ================================================================
-# NAT Gateway（FargateタスクのDatadog APMトレース送信用）
+# NAT Gateway（FargateタスクからのアウトバウンドHTTPS通信用）
+# Datadog AgentのバックエンドへのAPMデータ送信・SESメール送信等に使用
 # ================================================================
 resource "aws_eip" "nat" {
   domain = "vpc"
