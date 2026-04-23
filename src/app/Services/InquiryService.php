@@ -158,7 +158,7 @@ class InquiryService
             'body' => $validated['body'],
         ]);
 
-        Mail::to($inquiry->customer_email)->send(new InquiryReply($inquiry, $message));
+        // Mail::to($inquiry->customer_email)->send(new InquiryReply($inquiry, $message)); // メール送信停止中
 
         return $message;
     }

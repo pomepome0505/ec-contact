@@ -451,8 +451,7 @@
                         </template>
                     </v-tooltip>
                     <v-tooltip
-                        :disabled="!!inquiry.customer_email"
-                        text="メールアドレスが未登録のため返信できません"
+                        text="現在、返信メールの送信を停止しております。"
                         location="bottom"
                     >
                         <template #activator="{ props: tooltipProps }">
@@ -465,8 +464,7 @@
                                     color="primary"
                                     size="small"
                                     prepend-icon="mdi-reply"
-                                    :disabled="!inquiry.customer_email"
-                                    @click="openReplyDialog"
+                                    :disabled="true"
                                 >
                                     返信
                                 </v-btn>
@@ -590,14 +588,6 @@
                 </v-card-title>
                 <v-divider />
                 <v-card-text class="pa-4">
-                    <v-alert
-                        type="warning"
-                        variant="tonal"
-                        icon="mdi-alert-circle-outline"
-                        class="mb-4"
-                    >
-                        現在、本番環境でAmazon SESが利用できないため、メールは送信されません。
-                    </v-alert>
                     <v-text-field
                         v-model="replyForm.subject"
                         label="件名"

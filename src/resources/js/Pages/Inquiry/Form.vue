@@ -144,7 +144,7 @@ function resetForm() {
                         class="mb-4"
                         icon="mdi-alert-circle-outline"
                     >
-                        現在、お問い合わせ受付の確認メールは送信されません。受付番号を画面でご確認ください。
+                        現在、お問い合わせ受付の確認メールの送信を停止しております。
                     </v-alert>
                     <v-form ref="formRef" v-model="formValid" @submit.prevent="submitForm">
                         <v-row dense>
