@@ -125,19 +125,22 @@ function resetForm() {
                     <p class="text-body-2 text-medium-emphasis mb-4">
                         受付番号をお控えください。ご入力いただいたメールアドレスへ回答いたしますので、しばらくお待ちください。
                     </p>
-                    <v-chip color="primary" size="large" variant="tonal" class="mb-6">
+                    <v-chip color="primary" size="large" variant="tonal">
                         <v-icon icon="mdi-tag-outline" start />
                         {{ inquiryNumber }}
                     </v-chip>
-                    <div>
-                        <v-btn color="primary" variant="outlined" @click="resetForm">
-                            新しいお問い合わせ
-                        </v-btn>
-                    </div>
                 </v-card>
 
                 <!-- フォーム -->
                 <v-card v-if="!submitted" class="pa-6">
+                    <v-alert
+                        type="info"
+                        variant="tonal"
+                        class="mb-4"
+                        icon="mdi-information-outline"
+                    >
+                        こちらはポートフォリオ用のデモサイトです。個人情報の入力はお控えください。
+                    </v-alert>
                     <v-alert
                         type="warning"
                         variant="tonal"

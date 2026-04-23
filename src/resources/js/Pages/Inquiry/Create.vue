@@ -136,6 +136,14 @@
         </div>
 
         <v-card class="pa-6" style="border: 1px solid #e2e8f0">
+            <v-alert
+                type="info"
+                variant="tonal"
+                class="mb-4"
+                icon="mdi-information-outline"
+            >
+                こちらはポートフォリオ用のデモサイトです。個人情報の入力はお控えください。
+            </v-alert>
             <v-form
                 ref="formRef"
                 v-model="formValid"
