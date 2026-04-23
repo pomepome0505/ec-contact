@@ -3,28 +3,6 @@
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# Secrets Manager: Datadog APIキー
-# 値はterraform apply後に手動で設定する
-# ECSタスク実行時にDD_API_KEYとして注入される
-# ------------------------------------------------------------------------------
-resource "aws_secretsmanager_secret" "datadog_api_key" {
-  name        = "${var.project_name}-${var.environment}-datadog-api-key"
-  description = "Datadog API Key for dd-trace-php APM and Forwarder Lambda"
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-datadog-api-key"
-    Project     = var.project_name
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  }
-}
-
-resource "aws_secretsmanager_secret_version" "datadog_api_key" {
-  secret_id     = aws_secretsmanager_secret.datadog_api_key.id
-  secret_string = var.datadog_api_key
-}
-
-# ------------------------------------------------------------------------------
 # Datadog Forwarder Lambda（CloudWatch Logs → Datadog ログ転送）
 # Lambda自体はVPC外に配置されるためインターネットアクセスが自動的に有効
 # Datadogの公式CloudFormationテンプレートを使用

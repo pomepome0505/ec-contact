@@ -1,6 +1,28 @@
 # ==============================================================================
-# Secrets Manager: アプリケーションシークレット
+# Secrets Manager
 # ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Datadog API Key
+# ECSタスク実行時にDD_API_KEYとして注入される
+# Datadog Forwarder Lambdaからも参照される
+# ------------------------------------------------------------------------------
+resource "aws_secretsmanager_secret" "datadog_api_key" {
+  name        = "${var.project_name}-${var.environment}-datadog-api-key"
+  description = "Datadog API Key for dd-trace-php APM and Forwarder Lambda"
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-datadog-api-key"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "datadog_api_key" {
+  secret_id     = aws_secretsmanager_secret.datadog_api_key.id
+  secret_string = var.datadog_api_key
+}
 
 # ------------------------------------------------------------------------------
 # Laravel APP_KEY
