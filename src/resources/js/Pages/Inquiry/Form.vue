@@ -139,6 +139,14 @@ function resetForm() {
                 <!-- フォーム -->
                 <v-card v-if="!submitted" class="pa-6">
                     <v-alert
+                        type="info"
+                        variant="tonal"
+                        class="mb-4"
+                        icon="mdi-information-outline"
+                    >
+                        こちらはポートフォリオ用のデモサイトです。個人情報の入力はお控えください。
+                    </v-alert>
+                    <v-alert
                         type="warning"
                         variant="tonal"
                         class="mb-4"
