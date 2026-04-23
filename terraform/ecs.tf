@@ -84,10 +84,6 @@ resource "aws_ecs_task_definition" "main" {
           name  = "APP_URL"
           value = "https://${var.domain_name}"
         },
-        {
-          name  = "APP_KEY"
-          value = var.app_key
-        },
         # ログは stderr に出力して CloudWatch Logs に転送する
         {
           name  = "LOG_CHANNEL"
@@ -109,10 +105,6 @@ resource "aws_ecs_task_definition" "main" {
         {
           name  = "DB_USERNAME"
           value = "admin"
-        },
-        {
-          name  = "DB_PASSWORD"
-          value = var.db_password
         },
         {
           name  = "MAIL_MAILER"
@@ -153,6 +145,14 @@ resource "aws_ecs_task_definition" "main" {
         {
           name      = "DD_API_KEY"
           valueFrom = aws_secretsmanager_secret.datadog_api_key.arn
+        },
+        {
+          name      = "APP_KEY"
+          valueFrom = aws_secretsmanager_secret.app_key.arn
+        },
+        {
+          name      = "DB_PASSWORD"
+          valueFrom = aws_secretsmanager_secret.db_password.arn
         }
       ]
 

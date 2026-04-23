@@ -203,7 +203,7 @@ resource "aws_iam_role_policy" "datadog_integration" {
 
 # ------------------------------------------------------------------------------
 # ECSタスク実行ロールにSecrets Manager読み取り権限を追加
-# DD_API_KEYをSecrets Managerから取得するために必要
+# DD_API_KEY / APP_KEY / DB_PASSWORDをSecrets Managerから取得するために必要
 # ------------------------------------------------------------------------------
 resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
   name = "lmi-production-secrets-read-policy"
@@ -218,7 +218,11 @@ resource "aws_iam_role_policy" "ecs_task_execution_secrets" {
         Action = [
           "secretsmanager:GetSecretValue",
         ]
-        Resource = aws_secretsmanager_secret.datadog_api_key.arn
+        Resource = [
+          aws_secretsmanager_secret.datadog_api_key.arn,
+          aws_secretsmanager_secret.app_key.arn,
+          aws_secretsmanager_secret.db_password.arn,
+        ]
       }
     ]
   })
